@@ -6,6 +6,9 @@ import Vue from 'vue/dist/vue.esm'
 import store from './store/store.js'
 
 // vue components
+import Accordion from './components/accordion/Accordion.vue'
+import AccordionItem from './components/accordion/AccordionItem.vue'
+
 import Modal from './components/modal/Modal.vue'
 import ModalTrigger from './components/modal/ModalTrigger.vue'
 import ModalWrapper from './components/modal/ModalWrapper.vue'
@@ -22,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const app = new Vue({
         el: '#v-app',
         store,
-        components: { Modal, ModalTrigger, ModalWrapper }
+        components: { Accordion, AccordionItem, Modal, ModalTrigger, ModalWrapper }
       })
     })
   }
