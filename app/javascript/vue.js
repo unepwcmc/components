@@ -9,6 +9,9 @@ import store from './store/store.js'
 import Accordion from './components/accordion/Accordion.vue'
 import AccordionItem from './components/accordion/AccordionItem.vue'
 
+import Carousel from './components/carousel/Carousel.vue'
+import CarouselSlide from './components/carousel/CarouselSlide.vue'
+
 import Modal from './components/modal/Modal.vue'
 import ModalTrigger from './components/modal/ModalTrigger.vue'
 import ModalWrapper from './components/modal/ModalWrapper.vue'
@@ -25,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const app = new Vue({
         el: '#v-app',
         store,
-        components: { Accordion, AccordionItem, Modal, ModalTrigger, ModalWrapper }
+        components: { Accordion, AccordionItem, Carousel, CarouselSlide, Modal, ModalTrigger, ModalWrapper }
       })
     })
   }
