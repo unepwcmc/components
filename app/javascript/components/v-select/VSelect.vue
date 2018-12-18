@@ -1,7 +1,7 @@
 <template>
   <div class="ui-select relative hover--pointer" :class="{'ui-select--disabled': isDisabled}">
 
-    <div class="ui-select__toggle-wrapper" @click="click()">
+    <div class="ui-select__toggle-wrapper" @click="toggleSelect">
 
       <label 
         v-if="config.label"
@@ -20,7 +20,7 @@
 
     </div>
 
-    <div v-show="isActive" class="ui-select__dropdown">   
+    <div v-show="isActive" class="ui-select__dropdown">
       <div class="ui-select__options-wrapper">
 
         <template v-if="isMultiselect">
@@ -105,10 +105,6 @@ export default {
       this.isActive = this.options.length ? !this.isActive : false
     },
 
-    click () {
-      this.toggleSelect()
-    },
-
     initializeSelectedInternal () {
       if (this.selected === null) {
         this.selectedInternal = this.isMultiselect ? [] : UNDEFINED_OBJECT
@@ -154,7 +150,7 @@ export default {
 
   created () {
     window.addEventListener('click', e => {
-      if (!this.$el.contains(e.target)) { this.closeSelect() }   
+      if (!this.$el.contains(e.target)) { this.closeSelect() }
     })
 
     this.initializeSelectedInternal()
