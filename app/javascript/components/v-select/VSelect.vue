@@ -5,7 +5,7 @@
 
       <label 
         v-if="config.label"
-        class="ui-select__label" 
+        class="ui-select__label hover--pointer" 
         :for="hiddenId">
         <span class="ui-select__selection">{{ config.label }}</span>
         <slot name="label-icon"></slot>
@@ -170,6 +170,12 @@ export default {
 
 <style lang="scss">
 $black: #000000;
+
+.hover--pointer {
+  &:hover {
+    cursor: pointer;
+  }
+}
 
 .ui-select {
   &--disabled {
