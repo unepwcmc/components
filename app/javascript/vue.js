@@ -13,6 +13,8 @@ import Modal from './components/modal/Modal'
 import ModalTrigger from './components/modal/ModalTrigger'
 import ModalWrapper from './components/modal/ModalWrapper'
 
+import VNav from './components/nav/VNav'
+
 import VSelect from './components/v-select/VSelect'
 
 // create event hub and export so that it can be imported into .vue files
@@ -27,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const app = new Vue({
         el: '#v-app',
         store,
-        components: { Accordion, AccordionItem, Modal, ModalTrigger, ModalWrapper, VSelect }
+        components: { Accordion, AccordionItem, Modal, ModalTrigger, ModalWrapper, VNav, VSelect }
       })
     })
   }
