@@ -38,8 +38,6 @@ import VNavDropdown from "./VNavDropdown.vue"
 import VNavLink from "./VNavLink"
 import { mixinResponsive } from "../../mixins/mixin-responsive"
 
-//label, id, children, url
-
 export default {
   components: {
     VNavDropdown,
@@ -136,11 +134,9 @@ $white: #ffffff;
 // horizontal nav bar
 //--------------------------------------------------
   &--bar {
-    .nav {
-      &__dropdown-body {
-        &.nav__dropdown--two-col {
-          column-count: 2;
-        }
+    .nav__dropdown-body {
+      &.nav__dropdown--two-col {
+        column-count: 2;
       }
     }
   }
