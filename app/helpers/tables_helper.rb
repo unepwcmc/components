@@ -49,3 +49,4 @@ module TablesHelper
     html += html_rows(rows, is_rails_array)
     html += html_table_end
   end
+end
