@@ -92,29 +92,21 @@ export default {
 
     loadLayer(forceAdd, isStyleLoaded) {
       if (isStyleLoaded || forceAdd) {
-        this.toggleLayer(false, forceAdd)
+        this.toggleLayer(forceAdd)
       }
     },
 
-    toggleFilter(boolean) {
-      if (typeof boolean == "boolean") {
-        this.selected = boolean
-      } else {
-        this.selected = !this.selected
-      }
-
-      this.toggleLayer(true)
+    toggleFilter() {
+      this.selected = !this.selected
+      this.toggleLayer()
     },
 
-    toggleLayer(pan, forceAdd) {
+    toggleLayer(forceAdd) {
       if (!this.layerAdded || forceAdd) {
         this.createDataset(this.selected)
       }
-      if (this.selected) {
-        this.showLayer(pan)
-      } else {
-        this.hideLayer()
-      }
+
+      this.selected ? this.showLayer() : this.hideLayer()
     },
 
     getDatasetName() {
@@ -160,7 +152,7 @@ export default {
       this.toggleLayer()
     },
 
-    showLayer(pan) {
+    showLayer() {
       if (this.layerType === "Raster") {
         eventHub.$emit("map-show-layer", this.getDatasetName())
       } else {
