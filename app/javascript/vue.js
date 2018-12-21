@@ -13,6 +13,8 @@ import Modal from './components/modal/Modal'
 import ModalTrigger from './components/modal/ModalTrigger'
 import ModalWrapper from './components/modal/ModalWrapper'
 
+import VMap from './components/map/VMap'
+
 import VNav from './components/nav/VNav'
 
 import VSelect from './components/v-select/VSelect'
@@ -29,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const app = new Vue({
         el: '#v-app',
         store,
-        components: { Accordion, AccordionItem, Modal, ModalTrigger, ModalWrapper, VNav, VSelect }
+        components: { Accordion, AccordionItem, Modal, ModalTrigger, ModalWrapper, VMap, VNav, VSelect }
       })
     })
   }
