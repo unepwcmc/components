@@ -4,10 +4,7 @@
       <h3>{{ filter.name }}</h3>
       <facet
         :id="filter.id"
-        :name="filter.name"
-        :layers="filter.layers"
-        :layerGroup="layerGroup"
-        :embedded="embedded">
+        :layers="filter.layers">
       </facet>
     </template>
   </div>
@@ -33,13 +30,9 @@ export default {
 
   props: {
     filters: {
+      default: () => [],
       type: Array
-    },
-    layerGroup: {
-      required: true,
-      type: Object
-    },
-    embedded: Boolean
+    }
   },
 
   methods: {

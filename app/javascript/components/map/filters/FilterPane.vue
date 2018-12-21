@@ -3,7 +3,7 @@
     <button @click.prevent="togglePane" class="pane--target__close">{{paneIcon}}</button>
 
     <div class="pane--target__content">
-      <filters :filters="filtersArray" :layer-group="layerGroup" :embedded="embedded"></filters>
+      <filters :filters="filtersArray"></filters>
     </div>
   </div>
 </template>
@@ -29,19 +29,13 @@ export default {
     id: {
       type: String,
       required: true
-    },
-    source: String,
-    embedded: {
-      type: Boolean,
-      default: false
     }
   },
 
   data() {
     return {
       isActive: true,
-      filtersArray: EXAMPLE_FILTERS,
-      layerGroup: {}
+      filtersArray: EXAMPLE_FILTERS
     }
   },
 

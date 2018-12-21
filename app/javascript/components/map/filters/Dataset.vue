@@ -6,7 +6,6 @@
 
       <div class="filters__filter-legend">
         <h3 class="filters__filter-title">{{ name }}</h3>
-        <p class="filters__filter-description">{{description}}</p>
         
         <div class="filters__filter-legend__gradient" :style="legendGradient"></div>
 
@@ -37,27 +36,17 @@ export default {
       required: true,
       type: String
     },
-    datasetName: String,
-    reports: {
-      type: Array
-    },
     event: {
       required: true,
       type: String
     },
     colour: String,
-    geometry: Object,
     cartoFilters: Array,
     cartoTables: Array,
     cartoColours: Array,
     mapboxTileset: String,
     layerType: String,
-    serviceUrl: String,
-    legend: Array,
-    legendUrl: String,
-    description: String,
-    link: String,
-    accordionItemActive: Boolean
+    legend: Array
   },
 
   data() {
@@ -76,14 +65,6 @@ export default {
 
   destroyed() {
     eventHub.$off("map-reload-layers", this.reloadLayer);
-  },
-
-  watch: {
-    accordionItemActive() {
-      if (!this.accordionItemActive) {
-        this.toggleFilter(false);
-      }
-    }
   },
 
   computed: {

@@ -11,7 +11,7 @@
 
 const VECTOR_LAYER = {
   id: 320,
-  name: "Drought Severity",
+  name: "Drought Severity - Vector",
   map_type: "Vector",
   legend: null,
   tileset: null,
@@ -22,7 +22,7 @@ const VECTOR_LAYER = {
 
 const VECTOR_LINE_LAYER = {
   id: 171,
-  name: "River Quality",
+  name: "River Quality - VectorLine",
   map_type: "VectorLine",
   legend: null,
   tileset: null,
@@ -33,7 +33,7 @@ const VECTOR_LINE_LAYER = {
 
 const RASTER_LAYER = {
   id: 139,
-  name: "Carbon Stocks",
+  name: "Carbon Stocks - Raster",
   map_type: "Raster",
   legend: ["rgb(58,130,38)", "rgb(228,238,236)", "rgb(157,100,43)"],
   tileset: "unepwcmc.des977oz",
