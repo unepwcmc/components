@@ -103,6 +103,7 @@ export default {
     },
 
     reloadDataset() {
+      this.layerAdded = false
       if(this.selected) {this.addDataset(true)}
     },
 
