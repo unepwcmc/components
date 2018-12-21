@@ -15,8 +15,7 @@
  * multiple layers
  * Key events:
  *   map-add-layer: creates a single map layer with given id
- *   map-show-layer: show the layer with provided id (must already have been created)
- *   map-hide-layer: hide the layer with provided id (must already have been created)
+ *   map-hide-layers: hide the layer with provided id (must already have been created)
  *
  */
 import * as turf from "@turf/turf";
@@ -37,7 +36,7 @@ export default {
     return {
       //can use for map styling/funcitonality i.e. embedded vs full page or different filter types
       id: "map--type",
-      currentLayerId: undefined,
+      currentDatasetId: null,
       mapboxToken:
         "pk.eyJ1IjoibGV2aWF0aGFuczE3IiwiYSI6ImNpeDd5YWIzZTAwM3Myb29jaHNleW02YTgifQ.KOR1dSr7sTbWUtXw4V6tpA",
       cartoUsername: "carbon-tool",
@@ -47,9 +46,8 @@ export default {
 
   mounted() {
     eventHub.$on("map-add-layer", this.addLayer);
-    eventHub.$on("map-show-layer", this.showLayer);
-    eventHub.$on("map-hide-layer", this.hideLayer);
-    eventHub.$on("map-set-curr", this.setLayer);
+    eventHub.$on("map-hide-layers", this.hideLayers);
+    eventHub.$on("map-set-curr", this.setLayers);
 
     mapboxgl.accessToken = this.mapboxToken;
 
@@ -191,19 +189,27 @@ export default {
       return this.createTiles(this.cartoUsername, this.cartoApiKey, carto);
     },
 
-    setLayer(layerId) {
-      if (this.currentLayerId !== layerId) {
-        eventHub.$emit("hide-" + this.currentLayerId);
-        this.currentLayerId = layerId;
+    setLayers(dataset) {
+      if (this.currentDatasetId !== dataset.id) {
+        eventHub.$emit("deselect-" + this.currentDatasetId);
+        this.currentDatasetId = dataset.id;
       }
+
+      if (dataset.id !== null) { this.showLayers(dataset.layerIds) }
     },
 
-    showLayer(layerId) {
-      this.setLayerVisibility(layerId, true)
+    showLayers(layerIds) {
+      this.setLayerVisibilities(layerIds, true)
     },
 
-    hideLayer(layerId) {
-      this.setLayerVisibility(layerId, false)
+    hideLayers(layerIds) {
+      this.setLayerVisibilities(layerIds, false)
+    },
+
+    setLayerVisibilities(layerIds, isVisible) {
+        layerIds.forEach(id => {
+          this.setLayerVisibility(id, isVisible)
+        })
     },
 
     setLayerVisibility(layerId, isVisible) {
@@ -212,7 +218,7 @@ export default {
       if (this.map.getLayer(layerId)) {
         this.map.setLayoutProperty(layerId, "visibility", visibility);
       }
-    }
+    },
   }
 };
 </script>

@@ -55,8 +55,7 @@ export default {
 
   mounted() {
     eventHub.$on("map-reload-layers", this.reloadDataset)
-    eventHub.$on("hide-" + this.getDatasetName(), this.deselectDataset)
-    eventHub.$on("add-" + this.getDatasetName(), this.selectDataset)
+    eventHub.$on("deselect-" + this.getDatasetId(), this.deselectDataset)
   },
 
   destroyed() {
@@ -82,11 +81,25 @@ export default {
           background: `linear-gradient(to right, ${colours})`
         }
       }
+    },
+
+    dataset() {
+      const dataset = {id: this.getDatasetId(), layerIds: []}
+
+      if (this.layerType === 'Raster') {
+        dataset.layerIds.push(this.getDatasetId())
+      } else {
+        for (let ii = 0; ii < this.cartoFilters.length ; ii++) {
+          dataset.layerIds.push(this.getDatasetId() + "_" + ii)
+        }
+      }
+
+      return dataset
     }
   },
 
   methods: {
-    getDatasetName() {
+    getDatasetId() {
       return `dataset_${this.id}_${this.name}`
     },
 
@@ -109,7 +122,7 @@ export default {
 
     addDataset(forceCreate=false) {
       this.createDatasetIfNecessary(forceCreate)
-      this.showDataset()
+      this.setCurrentDataset()
     },
 
     createDatasetIfNecessary(forceCreate=false) {
@@ -118,28 +131,12 @@ export default {
       }
     },
 
-    showDataset() {
-      this.setLayerVisibility(true)
+    setCurrentDataset() {
+      eventHub.$emit("map-set-curr", this.dataset)
     },
 
-    hideDataset() {
-      this.setLayerVisibility(false)
-    },
-
-    setLayerVisibility(isVisible) {
-      const visibility = isVisible ? "show" : "hide"
-
-      if (this.layerType === "Raster") {
-        eventHub.$emit(`map-${visibility}-layer`, this.getDatasetName())
-      } else {
-        for (let ii = 0; ii < this.cartoFilters.length; ii++) {
-          eventHub.$emit(`map-${visibility}-layer`,this.getDatasetName() + "_" + ii)
-        }
-      }
-
-      if (isVisible) {
-        eventHub.$emit("map-set-curr", this.getDatasetName())
-      }
+    hideDatasetLayers() {
+      eventHub.$emit("map-hide-layers", this.dataset.layerIds)
     },
 
     createDataset(selected) {
@@ -147,7 +144,7 @@ export default {
       //TODO: extract
       if (this.layerType === "Raster") {
         eventHub.$emit("map-add-layer", {
-          name: this.getDatasetName(),
+          name: this.getDatasetId(),
           type: this.layerType,
           visible: selected,
           mapbox: {
@@ -161,7 +158,7 @@ export default {
             filter: this.cartoFilters[ii],
             tables: this.cartoTables,
             colour: this.cartoColours[ii],
-            id: this.getDatasetName() + "_" + ii
+            id: this.getDatasetId() + "_" + ii
           }
           eventHub.$emit("map-add-layer", {
             name: layer.id,
@@ -179,7 +176,7 @@ export default {
 
   watch: {
     selected(isSelected) {
-      isSelected ? this.addDataset() : this.hideDataset()
+      isSelected ? this.addDataset() : this.hideDatasetLayers()
     }
   }
 }
