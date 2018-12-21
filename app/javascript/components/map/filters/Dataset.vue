@@ -24,6 +24,7 @@
  * visible by events that are received by Map.vue that shows/hides individual layers
  */
 import { eventHub } from "../../../vue.js"
+import { truncate } from '@turf/turf';
 
 export default {
   name: "layer",
@@ -54,7 +55,6 @@ export default {
 
   mounted() {
     eventHub.$on("map-reload-layers", this.reloadDataset)
-    /** TODO change to layers */
     eventHub.$on("hide-" + this.getDatasetName(), this.deselectDataset)
     eventHub.$on("add-" + this.getDatasetName(), this.selectDataset)
   },
@@ -103,16 +103,16 @@ export default {
     },
 
     reloadDataset() {
-      this.selected ? this.addDataset() : this.hideDataset()
+      if(this.selected) {this.addDataset(true)}
     },
 
-    addDataset() {
-      this.createDatasetIfNecessary()
+    addDataset(forceCreate=false) {
+      this.createDatasetIfNecessary(forceCreate)
       this.showDataset()
     },
 
-    createDatasetIfNecessary(forceAdd=false) {
-      if (!this.layerAdded || forceAdd) {
+    createDatasetIfNecessary(forceCreate=false) {
+      if (!this.layerAdded || forceCreate) {
         this.createDataset(this.selected)
       }
     },
@@ -144,9 +144,8 @@ export default {
     createDataset(selected) {
       this.layerAdded = true
       //TODO: extract
-      /** raster datasets contain just one layer to show */
       if (this.layerType === "Raster") {
-        eventHub.$emit("map-create-layer", {
+        eventHub.$emit("map-add-layer", {
           name: this.getDatasetName(),
           type: this.layerType,
           visible: selected,
@@ -155,7 +154,7 @@ export default {
           }
         })
       } else {
-        /** Vector datasets contain multiple layers....*/
+        //Vector datasets contain multiple layers
         for (let ii = 0; ii < this.cartoFilters.length; ii++) {
           let layer = {
             filter: this.cartoFilters[ii],
@@ -163,7 +162,7 @@ export default {
             colour: this.cartoColours[ii],
             id: this.getDatasetName() + "_" + ii
           }
-          eventHub.$emit("map-create-layer", {
+          eventHub.$emit("map-add-layer", {
             name: layer.id,
             type: this.layerType,
             visible: selected,

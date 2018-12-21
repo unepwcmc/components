@@ -14,7 +14,7 @@
  * This component just handles 'mapbox layers' on the map and knows nothing about our 'datasetss' which may contain
  * multiple layers
  * Key events:
- *   map-create-layer: creates a single map layer with given id
+ *   map-add-layer: creates a single map layer with given id
  *   map-show-layer: show the layer with provided id (must already have been created)
  *   map-hide-layer: hide the layer with provided id (must already have been created)
  *
@@ -46,7 +46,7 @@ export default {
   },
 
   mounted() {
-    eventHub.$on("map-create-layer", this.createLayer);
+    eventHub.$on("map-add-layer", this.addLayer);
     eventHub.$on("map-show-layer", this.showLayer);
     eventHub.$on("map-hide-layer", this.hideLayer);
     eventHub.$on("map-set-curr", this.setLayer);
@@ -88,15 +88,15 @@ export default {
   },
 
   methods: {
-    createLayer(layer) {
+    addLayer(layer) {
       if (layer.type === "Raster") {
-        this.createRasterLayer(layer);
+        this.addRasterLayer(layer);
       } else {
-        this.createVectorLayer(layer);
+        this.addVectorLayer(layer);
       }
     },
 
-    createRasterLayer(layer) {
+    addRasterLayer(layer) {
       // Mapbox tileset
       if (layer.mapbox && layer.mapbox.tileset) {
         this.map.addSource(layer.name, {
@@ -105,7 +105,7 @@ export default {
           tileSize: 256
         });
 
-        // Generic tile endpoint
+      // Generic tile endpoint
       } else if (layer.mapbox && layer.mapbox.endpoint) {
         this.map.addSource(layer.name, {
           type: "raster",
@@ -113,6 +113,7 @@ export default {
           tileSize: 256
         });
       }
+
       this.map.addLayer({
         id: layer.name,
         type: "raster",
@@ -127,12 +128,7 @@ export default {
       this.map.setPaintProperty(layer.name, "raster-opacity", 0.5);
     },
 
-    createCartoTiles(carto) {
-      /** Use mixin to create the tiles, passing it our user/key */
-      return this.createTiles(this.cartoUsername, this.cartoApiKey, carto);
-    },
-
-    createVectorLayer(layer) {
+    addVectorLayer(layer) {
       if (layer.type === "Vector") {
         this.createVectorShapeLayer(layer.visible, layer.carto);
       } else if (layer.type === "VectorLine") {
@@ -191,24 +187,30 @@ export default {
       });
     },
 
-    showLayer(layerId) {
-      if (this.map.getLayer(layerId)) {
-        this.map.setLayoutProperty(layerId, "visibility", "visible");
-      }
+    createCartoTiles(carto) {
+      return this.createTiles(this.cartoUsername, this.cartoApiKey, carto);
     },
 
     setLayer(layerId) {
-      if (this.currentLayerId === layerId) {
-      } else {
+      if (this.currentLayerId !== layerId) {
         eventHub.$emit("hide-" + this.currentLayerId);
+        this.currentLayerId = layerId;
       }
+    },
 
-      this.currentLayerId = layerId;
+    showLayer(layerId) {
+      this.setLayerVisibility(layerId, true)
     },
 
     hideLayer(layerId) {
+      this.setLayerVisibility(layerId, false)
+    },
+
+    setLayerVisibility(layerId, isVisible) {
+      const visibility = isVisible ? 'visible' : 'none'
+
       if (this.map.getLayer(layerId)) {
-        this.map.setLayoutProperty(layerId, "visibility", "none");
+        this.map.setLayoutProperty(layerId, "visibility", visibility);
       }
     }
   }
