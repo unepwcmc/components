@@ -1,11 +1,11 @@
 
 <template>
-<div class="map__container">
-  <div class="map-wrapper">
-    <div :id="id" class="map"></div>
-  </div>    
-  <filter-pane id="filters-layers"></filter-pane>
-</div>
+  <div class="map__container">
+    <div class="map-wrapper">
+      <div :id="id" class="map"></div>
+    </div>
+    <filter-pane id="filters-layers"></filter-pane>
+  </div>
 </template>
 
 <script>
@@ -19,11 +19,11 @@
  *   map-hide-layer: hide the layer with provided id (must already have been created)
  *
  */
-import * as turf from "@turf/turf"
+import * as turf from "@turf/turf";
 
-import LayersControl from "./helpers/layers-control.js"
-import { mixinCarto } from "./mixins/mixin-carto.js"
-import { eventHub } from "../../vue.js"
+import LayersControl from "./helpers/layers-control.js";
+import { mixinCarto } from "./mixins/mixin-carto.js";
+import { eventHub } from "../../vue.js";
 import FilterPane from "./filters/FilterPane";
 
 export default {
@@ -35,22 +35,23 @@ export default {
 
   data() {
     return {
-      id: 'map--type',
+      //can use for map styling/funcitonality i.e. embedded vs full page or different filter types
+      id: "map--type",
       currentLayerId: undefined,
       mapboxToken:
         "pk.eyJ1IjoibGV2aWF0aGFuczE3IiwiYSI6ImNpeDd5YWIzZTAwM3Myb29jaHNleW02YTgifQ.KOR1dSr7sTbWUtXw4V6tpA",
       cartoUsername: "carbon-tool",
-      cartoApiKey: "f7762e628586b3ff41a371b8e89ea0069e975299",
-    }
+      cartoApiKey: "f7762e628586b3ff41a371b8e89ea0069e975299"
+    };
   },
 
   mounted() {
-    eventHub.$on("map-create-layer", this.createLayer)
-    eventHub.$on("map-show-layer", this.showLayer)
-    eventHub.$on("map-hide-layer", this.hideLayer)
-    eventHub.$on("map-set-curr", this.setLayer)
+    eventHub.$on("map-create-layer", this.createLayer);
+    eventHub.$on("map-show-layer", this.showLayer);
+    eventHub.$on("map-hide-layer", this.hideLayer);
+    eventHub.$on("map-set-curr", this.setLayer);
 
-    mapboxgl.accessToken = this.mapboxToken
+    mapboxgl.accessToken = this.mapboxToken;
 
     const map = new mapboxgl.Map({
       container: this.id,
@@ -58,40 +59,40 @@ export default {
       pitchWithRotate: false,
       center: [0, 30],
       zoom: 1
-    })
+    });
 
-    this.map = map
+    this.map = map;
 
     /** This event is for when mapbox style is changed on e.g. to 'streets' or 'basic'
      * so we reload all layers on the new map
      */
     map.on("style.load", () => {
-      eventHub.$emit("map-reload-layers", map.isStyleLoaded())
-    })
+      eventHub.$emit("map-reload-layers", map.isStyleLoaded());
+    });
 
     map.on("load", () => {
-      const navControl = new mapboxgl.NavigationControl()
-      const layersControl = new LayersControl()
+      const navControl = new mapboxgl.NavigationControl();
+      const layersControl = new LayersControl();
 
       const geocoderControl = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
         flyTo: true,
         zoom: false
-      })
+      });
 
       /** mapBox specific controls */
-      map.addControl(layersControl, "bottom-left")
-      map.addControl(navControl, "bottom-left")
-      map.addControl(geocoderControl, "top-left")
-    })
+      map.addControl(layersControl, "bottom-left");
+      map.addControl(navControl, "bottom-left");
+      map.addControl(geocoderControl, "top-left");
+    });
   },
 
   methods: {
     createLayer(layer) {
       if (layer.type === "Raster") {
-        this.createRasterLayer(layer)
+        this.createRasterLayer(layer);
       } else {
-        this.createVectorLayer(layer)
+        this.createVectorLayer(layer);
       }
     },
 
@@ -102,7 +103,7 @@ export default {
           type: "raster",
           url: `mapbox://${layer.mapbox.tileset}`,
           tileSize: 256
-        })
+        });
 
         // Generic tile endpoint
       } else if (layer.mapbox && layer.mapbox.endpoint) {
@@ -110,7 +111,7 @@ export default {
           type: "raster",
           tiles: [layer.mapbox.endpoint],
           tileSize: 256
-        })
+        });
       }
       this.map.addLayer({
         id: layer.name,
@@ -122,32 +123,32 @@ export default {
         layout: {
           visibility: layer.visible ? "visible" : "none"
         }
-      })
-      this.map.setPaintProperty(layer.name, "raster-opacity", 0.5)
+      });
+      this.map.setPaintProperty(layer.name, "raster-opacity", 0.5);
     },
 
     createCartoTiles(carto) {
       /** Use mixin to create the tiles, passing it our user/key */
-      return this.createTiles(this.cartoUsername, this.cartoApiKey, carto)
+      return this.createTiles(this.cartoUsername, this.cartoApiKey, carto);
     },
 
     createVectorLayer(layer) {
       if (layer.type === "Vector") {
-        this.createVectorShapeLayer(layer.visible, layer.carto)
+        this.createVectorShapeLayer(layer.visible, layer.carto);
       } else if (layer.type === "VectorLine") {
-        this.createVectorLineLayer(layer.visible, layer.carto)
+        this.createVectorLineLayer(layer.visible, layer.carto);
       }
     },
 
     createVectorShapeLayer(visible, carto) {
-      const tiles = this.createCartoTiles(carto)
+      const tiles = this.createCartoTiles(carto);
 
       tiles.getTiles(() => {
         this.map.addSource(carto.id, {
           type: "vector",
           tiles:
             tiles.mapProperties.mapProperties.metadata.tilejson.vector.tiles
-        })
+        });
         this.map.addLayer({
           id: carto.id,
           type: "fill",
@@ -162,18 +163,18 @@ export default {
           layout: {
             visibility: visible ? "visible" : "none"
           }
-        })
-      })
+        });
+      });
     },
     createVectorLineLayer(visible, carto) {
-      const tiles = this.createCartoTiles(carto)
+      const tiles = this.createCartoTiles(carto);
 
       tiles.getTiles(() => {
         this.map.addSource(carto.id, {
           type: "vector",
           tiles:
             tiles.mapProperties.mapProperties.metadata.tilejson.vector.tiles
-        })
+        });
         this.map.addLayer({
           id: carto.id,
           type: "line",
@@ -186,32 +187,32 @@ export default {
           layout: {
             visibility: visible ? "visible" : "none"
           }
-        })
-      })
+        });
+      });
     },
 
     showLayer(layerId) {
       if (this.map.getLayer(layerId)) {
-        this.map.setLayoutProperty(layerId, "visibility", "visible")
+        this.map.setLayoutProperty(layerId, "visibility", "visible");
       }
     },
 
     setLayer(layerId) {
       if (this.currentLayerId === layerId) {
       } else {
-        eventHub.$emit("remove-" + this.currentLayerId)
+        eventHub.$emit("remove-" + this.currentLayerId);
       }
 
-      this.currentLayerId = layerId
+      this.currentLayerId = layerId;
     },
 
     hideLayer(layerId) {
       if (this.map.getLayer(layerId)) {
-        this.map.setLayoutProperty(layerId, "visibility", "none")
+        this.map.setLayoutProperty(layerId, "visibility", "none");
       }
     }
   }
-}
+};
 </script>
 
 <style lang='scss'>
@@ -229,7 +230,8 @@ export default {
 // Mapbox controls
 //--------------------------------------------------
 .mapbox-gl-layer-ctrl-btn {
-  background-image: linear-gradient(transparent,transparent),url(https://api.mapbox.com/mapbox.js/v3.1.1/images/icons.svg);
+  background-image: linear-gradient(transparent, transparent),
+    url(https://api.mapbox.com/mapbox.js/v3.1.1/images/icons.svg);
   background-position: center -103px;
   background-repeat: no-repeat;
   background-size: 26px 260px;
@@ -259,7 +261,7 @@ export default {
   width: 400px;
 }
 
-.mapboxgl-ctrl.mapboxgl-ctrl-geocoder input[type='text'] {
+.mapboxgl-ctrl.mapboxgl-ctrl-geocoder input[type="text"] {
   color: #000;
   font-size: 16px;
   padding: 15px 15px 15px 40px;

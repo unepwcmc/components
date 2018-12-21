@@ -6,7 +6,7 @@
 
       <div class="filters__filter-legend">
         <h3 class="filters__filter-title">{{ name }}</h3>
-        
+
         <div class="filters__filter-legend__gradient" :style="legendGradient"></div>
 
         <div class="filters__filter-legend__labels flex flex-h-between">
@@ -27,16 +27,12 @@ import { eventHub } from "../../../vue.js";
 
 export default {
   name: "layer",
-  props: { //config object not hundreds of props
+  props: {
     id: {
       required: true,
       type: String
     },
     name: {
-      required: true,
-      type: String
-    },
-    event: {
       required: true,
       type: String
     },
@@ -69,7 +65,7 @@ export default {
 
   computed: {
     isActive() {
-      return this.selected
+      return this.selected;
     },
 
     legendGradient() {
@@ -108,7 +104,6 @@ export default {
       }
 
       this.toggleLayer(true);
-      eventHub.$emit(this.event);
     },
 
     toggleLayer(pan, forceAdd) {

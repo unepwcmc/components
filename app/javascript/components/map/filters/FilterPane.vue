@@ -1,5 +1,5 @@
 <template>
-  <div class="pane--target"  :class="{ 'pane--target--active' : isActive}">
+  <div class="pane--target" :class="{ 'pane--target--active' : isActive}">
     <button @click.prevent="togglePane" class="pane--target__close">{{paneIcon}}</button>
 
     <div class="pane--target__content">
@@ -15,10 +15,10 @@
  * Fires events paneOpened and paneClosed when the menu is hidden/revealed
  */
 
-import helpers from "../../../helpers/helpers.js"
-import { eventHub } from "../../../vue.js"
-import Filters from "./Filters.vue"
-import { EXAMPLE_FILTERS } from "../helpers/example-layers.js"
+import helpers from "../../../helpers/helpers.js";
+import { eventHub } from "../../../vue.js";
+import Filters from "./Filters.vue";
+import { EXAMPLE_FILTERS } from "../helpers/example-layers.js";
 
 export default {
   name: "filter-pane",
@@ -36,51 +36,51 @@ export default {
     return {
       isActive: true,
       filtersArray: EXAMPLE_FILTERS
-    }
+    };
   },
 
   computed: {
     paneIcon() {
-      return this.isActive ? '>' : '<'
+      return this.isActive ? ">" : "<";
     }
   },
 
   created() {
-    const event = "triggerPaneOpen-" + helpers.spacesToKebab(this.id)
-    eventHub.$on(event, this.openPane)
-    eventHub.$on("triggerPaneClose", this.closePane)
-    eventHub.$on("reload-all-facets", this.reload)
+    const event = "triggerPaneOpen-" + helpers.spacesToKebab(this.id);
+    eventHub.$on(event, this.openPane);
+    eventHub.$on("triggerPaneClose", this.closePane);
+    eventHub.$on("reload-all-facets", this.reload);
   },
 
   destroyed() {
-    const event = "triggerPaneOpen-" + helpers.spacesToKebab(this.id)
-    eventHub.$off(event, this.openPane)
-    eventHub.$off("triggerPaneClose", this.closePane)
-    eventHub.$off("getNewItems", this.updateSites)
+    const event = "triggerPaneOpen-" + helpers.spacesToKebab(this.id);
+    eventHub.$off(event, this.openPane);
+    eventHub.$off("triggerPaneClose", this.closePane);
+    eventHub.$off("getNewItems", this.updateSites);
   },
 
   methods: {
     openPane() {
-      this.isActive = true
+      this.isActive = true;
     },
 
     closePane() {
-      this.isActive = false
+      this.isActive = false;
     },
 
     togglePane() {
-      this.isActive ? this.closePane() : this.openPane()
+      this.isActive ? this.closePane() : this.openPane();
     },
 
     reload(e) {
       //reload data here
-      this.filtersArray = EXAMPLE_FILTERS
+      this.filtersArray = EXAMPLE_FILTERS;
     }
   }
-}
+};
 </script>
 
-<style lang="scss"> 
+<style lang="scss">
 .pane {
   &--target {
     color: white;
@@ -119,11 +119,12 @@ export default {
 .filters {
   &__radio-button {
     border: white 1px solid;
-    width: 10px; height: 10px;
+    width: 10px;
+    height: 10px;
 
     display: inline-block;
   }
-  
+
   &__filter {
     &.filter--active {
       .filters__radio-button {
@@ -132,7 +133,8 @@ export default {
     }
 
     &-legend {
-      &__image, &__gradient {
+      &__image,
+      &__gradient {
         border-radius: 15px;
         height: 15px;
         overflow: hidden;
