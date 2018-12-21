@@ -200,7 +200,7 @@ export default {
     setLayer(layerId) {
       if (this.currentLayerId === layerId) {
       } else {
-        eventHub.$emit("remove-" + this.currentLayerId);
+        eventHub.$emit("hide-" + this.currentLayerId);
       }
 
       this.currentLayerId = layerId;

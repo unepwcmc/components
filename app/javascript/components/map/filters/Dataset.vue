@@ -1,6 +1,6 @@
 <template>
   <div class="filters__filter flex" :class="{ 'filter--active': isActive}">
-    <i class="filters__radio-button" @click="toggleFilter"></i>
+    <i class="filters__radio-button" @click="toggleDataset"></i>
     <div class="filters__filter-container">
       <i v-if="colour" class="filters__filter-colour" :style="{ backgroundColor: colour }"></i>
 
@@ -53,14 +53,14 @@ export default {
   },
 
   mounted() {
-    eventHub.$on("map-reload-layers", this.reloadLayer) //TODO: move this logic elsewhere?
+    eventHub.$on("map-reload-layers", this.reloadDataset)
     /** TODO change to layers */
-    eventHub.$on("remove-" + this.getDatasetName(), this.removeLayer)
-    eventHub.$on("add-" + this.getDatasetName(), this.addLayer)
+    eventHub.$on("hide-" + this.getDatasetName(), this.deselectDataset)
+    eventHub.$on("add-" + this.getDatasetName(), this.selectDataset)
   },
 
   destroyed() {
-    eventHub.$off("map-reload-layers", this.reloadLayer)
+    eventHub.$off("map-reload-layers", this.toggleDataset)
   },
 
   computed: {
@@ -86,35 +86,64 @@ export default {
   },
 
   methods: {
-    reloadLayer(isStyleLoaded) {
-      this.loadLayer(true, isStyleLoaded)
-    },
-
-    loadLayer(forceAdd, isStyleLoaded) {
-      if (isStyleLoaded || forceAdd) {
-        this.toggleLayer(forceAdd)
-      }
-    },
-
-    toggleFilter() {
-      this.selected = !this.selected
-      this.toggleLayer()
-    },
-
-    toggleLayer(forceAdd) {
-      if (!this.layerAdded || forceAdd) {
-        this.createDataset(this.selected)
-      }
-
-      this.selected ? this.showLayer() : this.hideLayer()
-    },
-
     getDatasetName() {
       return `dataset_${this.id}_${this.name}`
     },
 
+    toggleDataset() {
+      this.selected ? this.deselectDataset() : this.selectDataset()
+    },
+
+    selectDataset() {
+      this.selected = true
+    },
+
+    deselectDataset() {
+      this.selected = false
+    },
+
+    reloadDataset() {
+      this.selected ? this.addDataset() : this.hideDataset()
+    },
+
+    addDataset() {
+      this.createDatasetIfNecessary()
+      this.showDataset()
+    },
+
+    createDatasetIfNecessary(forceAdd=false) {
+      if (!this.layerAdded || forceAdd) {
+        this.createDataset(this.selected)
+      }
+    },
+
+    showDataset() {
+      this.setLayerVisibility(true)
+    },
+
+    hideDataset() {
+      this.setLayerVisibility(false)
+    },
+
+    setLayerVisibility(isVisible) {
+      const visibility = isVisible ? "show" : "hide"
+
+      if (this.layerType === "Raster") {
+        eventHub.$emit(`map-${visibility}-layer`, this.getDatasetName())
+      } else {
+        for (let ii = 0; ii < this.cartoFilters.length; ii++) {
+          eventHub.$emit(`map-${visibility}-layer`,this.getDatasetName() + "_" + ii)
+        }
+      }
+
+      if (isVisible) {
+        eventHub.$emit("map-set-curr", this.getDatasetName())
+      }
+    },
+
     createDataset(selected) {
       this.layerAdded = true
+      //TODO: extract
       /** raster datasets contain just one layer to show */
       if (this.layerType === "Raster") {
         eventHub.$emit("map-create-layer", {
@@ -146,36 +175,11 @@ export default {
         }
       }
     },
+  },
 
-    addLayer() {
-      this.selected = true
-      this.toggleLayer()
-    },
-
-    showLayer() {
-      if (this.layerType === "Raster") {
-        eventHub.$emit("map-show-layer", this.getDatasetName())
-      } else {
-        for (let ii = 0; ii < this.cartoFilters.length; ii++) {
-          eventHub.$emit("map-show-layer", this.getDatasetName() + "_" + ii)
-        }
-      }
-      eventHub.$emit("map-set-curr", this.getDatasetName())
-    },
-
-    removeLayer() {
-      this.selected = false
-      this.hideLayer()
-    },
-
-    hideLayer() {
-      if (this.layerType === "Raster") {
-        eventHub.$emit("map-hide-layer", this.getDatasetName())
-      } else {
-        for (let ii = 0; ii < this.cartoFilters.length; ii++) {
-          eventHub.$emit("map-hide-layer", this.getDatasetName() + "_" + ii)
-        }
-      }
+  watch: {
+    selected(isSelected) {
+      isSelected ? this.addDataset() : this.hideDataset()
     }
   }
 }

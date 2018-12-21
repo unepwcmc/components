@@ -46,20 +46,18 @@ export default {
   },
 
   created() {
-    const event = "triggerPaneOpen-" + helpers.spacesToKebab(this.id);
-    eventHub.$on(event, this.openPane);
-    eventHub.$on("triggerPaneClose", this.closePane);
     eventHub.$on("reload-all-facets", this.reload);
   },
 
   destroyed() {
-    const event = "triggerPaneOpen-" + helpers.spacesToKebab(this.id);
-    eventHub.$off(event, this.openPane);
-    eventHub.$off("triggerPaneClose", this.closePane);
-    eventHub.$off("getNewItems", this.updateSites);
+    eventHub.$off("reload-all-facets", this.reload);
   },
 
   methods: {
+    togglePane() {
+      this.isActive ? this.closePane() : this.openPane();
+    },
+    
     openPane() {
       this.isActive = true;
     },
@@ -68,12 +66,8 @@ export default {
       this.isActive = false;
     },
 
-    togglePane() {
-      this.isActive ? this.closePane() : this.openPane();
-    },
-
     reload(e) {
-      //reload data here
+      //reload data, possibly with request, here
       this.filtersArray = EXAMPLE_FILTERS;
     }
   }
