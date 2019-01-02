@@ -2,8 +2,6 @@
   <div class="filters__filter flex" :class="{ 'filter--active': isActive}">
     <i class="filters__radio-button" @click="toggleDataset"></i>
     <div class="filters__filter-container">
-      <i v-if="colour" class="filters__filter-colour" :style="{ backgroundColor: colour }"></i>
-
       <div class="filters__filter-legend">
         <h3 class="filters__filter-title">{{ name }}</h3>
 
@@ -24,7 +22,7 @@
  * visible by events that are received by Map.vue that shows/hides individual layers
  */
 import { eventHub } from "../../../vue.js"
-import { truncate } from '@turf/turf';
+import { getLayers } from "../helpers/map-layer-helpers.js"
 
 export default {
   name: "layer",
@@ -33,29 +31,24 @@ export default {
       required: true,
       type: String
     },
-    name: {
-      required: true,
-      type: String
-    },
-    colour: String,
-    cartoFilters: Array,
-    cartoTables: Array,
-    cartoColours: Array,
-    mapboxTileset: String,
-    layerType: String,
-    legend: Array
+    config: Object
   },
 
   data() {
     return {
       selected: false,
-      layerAdded: false
+      layerAdded: false,
+      layerType: this.config.map_type,
+      cartoColours: this.config.carto_colors,
+      legend: this.config.legend,
+      layerCount: this.config.carto_filters.length,
+      name: this.config.name,
     }
   },
 
   mounted() {
     eventHub.$on("map-reload-layers", this.reloadDataset)
-    eventHub.$on("deselect-" + this.getDatasetId(), this.deselectDataset)
+    eventHub.$on("deselect-" + this.datasetId, this.deselectDataset)
   },
 
   destroyed() {
@@ -69,28 +62,32 @@ export default {
 
     legendGradient() {
       if (this.layerType === "Raster") {
-        const colours = this.legend.join(", ")
+        const colors = this.legend.join(", ")
 
         return {
-          background: `linear-gradient(to right, ${colours})`
+          background: `linear-gradient(to right, ${colors})`
         }
       } else {
-        const colours = this.cartoColours.join(", ")
+        const colors = this.cartoColours.join(", ")
 
         return {
-          background: `linear-gradient(to right, ${colours})`
+          background: `linear-gradient(to right, ${colors})`
         }
       }
     },
 
+    datasetId() {
+      return `dataset_${this.id}_${this.name}`
+    },
+
     dataset() {
-      const dataset = {id: this.getDatasetId(), layerIds: []}
+      const dataset = {id: this.datasetId, layerIds: []}
 
       if (this.layerType === 'Raster') {
-        dataset.layerIds.push(this.getDatasetId())
+        dataset.layerIds.push(this.datasetId)
       } else {
-        for (let i = 0; i < this.cartoFilters.length; i++) {
-          dataset.layerIds.push(this.getDatasetId() + "_" + i)
+        for (let i = 0; i < this.layerCount; i++) {
+          dataset.layerIds.push(this.datasetId + "_" + i)
         }
       }
 
@@ -99,10 +96,6 @@ export default {
   },
 
   methods: {
-    getDatasetId() {
-      return `dataset_${this.id}_${this.name}`
-    },
-
     toggleDataset() {
       this.selected ? this.deselectDataset() : this.selectDataset()
     },
@@ -141,36 +134,10 @@ export default {
 
     createDataset(selected) {
       this.layerAdded = true
-      if (this.layerType === "Raster") {
-        eventHub.$emit("map-add-layer", {
-          name: this.getDatasetId(),
-          type: this.layerType,
-          visible: selected,
-          mapbox: {
-            tileset: this.mapboxTileset
-          }
-        })
-      } else {
-        //Vector datasets contain multiple layers
-        for (let i = 0; i < this.cartoFilters.length; i++) {
-          let layer = {
-            filter: this.cartoFilters[i],
-            tables: this.cartoTables,
-            colour: this.cartoColours[i],
-            id: this.getDatasetId() + "_" + i
-          }
-          eventHub.$emit("map-add-layer", {
-            name: layer.id,
-            type: this.layerType,
-            visible: selected,
-            carto: layer,
-            mapbox: {
-              tileset: this.mapboxTileset
-            }
-          })
-        }
-      }
-    },
+      getLayers(this.datasetId, this.config, selected).forEach(
+        layer => { eventHub.$emit("map-add-layer", layer) }
+      )
+    }
   },
 
   watch: {

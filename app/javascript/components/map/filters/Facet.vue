@@ -4,14 +4,7 @@
       v-for="layer in layers"
       :key="layer.id"
       :id="id+'_'+layer.id"
-      :name="layer.name"
-      :colour="layer.colour"
-      :cartoFilters="layer.carto_filters"
-      :cartoTables="[layer.carto_table]"
-      :cartoColours="layer.carto_colors"
-      :mapboxTileset="layer.tileset"
-      :layerType="layer.map_type"
-      :legend="layer.legend"
+      :config="layer"
     ></dataset>
   </div>
 </template>
