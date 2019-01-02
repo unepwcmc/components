@@ -1,10 +1,10 @@
 <template>
   <div class="filters flex flex-column">
     <dataset
-      v-for="layer in layers"
-      :key="layer.id"
-      :id="id+'_'+layer.id"
-      :config="layer"
+      v-for="dataset in datasets"
+      :key="dataset.id"
+      :id="id+'_'+dataset.id"
+      :config="dataset"
     ></dataset>
   </div>
 </template>
@@ -21,7 +21,7 @@ export default {
     id: {
       required: true
     },
-    layers: {
+    datasets: {
       required: true,
       type: Array
     }
