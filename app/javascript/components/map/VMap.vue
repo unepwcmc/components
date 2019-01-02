@@ -11,7 +11,7 @@
 <script>
 /**
  * MapExplore is the main map panel and most of the functionality comes from turf & mixin-carto
- * This component just handles 'mapbox layers' on the map and knows nothing about our 'datasetss' which may contain
+ * This component just handles 'mapbox layers' on the map and knows nothing about our 'datasets' which may contain
  * multiple layers
  * Key events:
  *   map-add-layer: creates a single map layer with given id
@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       id: "map--type",
-      currentDatasetId: null,
+      currentLayerSetId: null,
       mapboxToken:
         "pk.eyJ1IjoibGV2aWF0aGFuczE3IiwiYSI6ImNpeDd5YWIzZTAwM3Myb29jaHNleW02YTgifQ.KOR1dSr7sTbWUtXw4V6tpA",
       cartoUsername: "carbon-tool",
@@ -189,13 +189,13 @@ export default {
       return this.createTiles(this.cartoUsername, this.cartoApiKey, carto)
     },
 
-    setLayers(dataset) {
-      if (this.currentDatasetId !== dataset.id) {
-        eventHub.$emit("deselect-" + this.currentDatasetId)
-        this.currentDatasetId = dataset.id
+    setLayers(layerSet) {
+      if (this.currentLayerSetId !== layerSet.id) {
+        eventHub.$emit("deselect-" + this.currentLayerSetId)
+        this.currentLayerSetId = layerSet.id
       }
 
-      if (dataset.id !== null) { this.showLayers(dataset.layerIds) }
+      if (layerSet.id !== null) { this.showLayers(layerSet.layerIds) }
     },
 
     showLayers(layerIds) {

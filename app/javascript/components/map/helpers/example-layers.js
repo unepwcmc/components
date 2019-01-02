@@ -9,7 +9,7 @@
 //   carto_colors: ["#17CDEA", "#1290A4", "#042F36"]
 // };
 
-const VECTOR_LAYER = {
+const VECTOR_DATASET = {
   id: 320,
   name: "Drought Severity - Vector",
   map_type: "Vector",
@@ -20,7 +20,7 @@ const VECTOR_LAYER = {
   carto_colors: ["#17CDEA", "#1290A4","#042F36"]
 };
 
-const VECTOR_LINE_LAYER = {
+const VECTOR_LINE_DATASET = {
   id: 171,
   name: "River Quality - VectorLine",
   map_type: "VectorLine",
@@ -31,7 +31,7 @@ const VECTOR_LINE_LAYER = {
   carto_colors: ["#A4895D", "#6F5326", "#46300D"]
 };
 
-const RASTER_LAYER = {
+const RASTER_DATASET = {
   id: 139,
   name: "Carbon Stocks - Raster",
   map_type: "Raster",
@@ -42,10 +42,10 @@ const RASTER_LAYER = {
   carto_colors: null
 };
 
-export const EXAMPLE_FILTERS = [
+export const EXAMPLE_DATASETS = [
   {
     id: 1,
     name: "A filter",
-    layers: [VECTOR_LAYER, VECTOR_LINE_LAYER, RASTER_LAYER]
+    datasets: [VECTOR_DATASET, VECTOR_LINE_DATASET, RASTER_DATASET]
   }
 ];
