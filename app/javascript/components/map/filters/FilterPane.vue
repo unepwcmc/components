@@ -9,16 +9,10 @@
 </template>
 
 <script>
-/**
- * Top-level component of the menu system
- * Makes the api call to get menu items from backend and builds menu appropriately on event 'reload-all-facets'
- * Fires events paneOpened and paneClosed when the menu is hidden/revealed
- */
-
-import helpers from "../../../helpers/helpers.js";
-import { eventHub } from "../../../vue.js";
-import Filters from "./Filters.vue";
-import { EXAMPLE_FILTERS } from "../helpers/example-layers.js";
+import helpers from "../../../helpers/helpers.js"
+import { eventHub } from "../../../vue.js"
+import { EXAMPLE_FILTERS } from "../helpers/example-layers.js"
+import Filters from "./Filters.vue"
 
 export default {
   name: "filter-pane",
@@ -36,42 +30,42 @@ export default {
     return {
       isActive: true,
       filtersArray: EXAMPLE_FILTERS
-    };
+    }
   },
 
   computed: {
     paneIcon() {
-      return this.isActive ? ">" : "<";
+      return this.isActive ? ">" : "<"
     }
   },
 
   created() {
-    eventHub.$on("reload-all-facets", this.reload);
+    eventHub.$on("reload-all-facets", this.reload)
   },
 
   destroyed() {
-    eventHub.$off("reload-all-facets", this.reload);
+    eventHub.$off("reload-all-facets", this.reload)
   },
 
   methods: {
     togglePane() {
-      this.isActive ? this.closePane() : this.openPane();
+      this.isActive ? this.closePane() : this.openPane()
     },
     
     openPane() {
-      this.isActive = true;
+      this.isActive = true
     },
 
     closePane() {
-      this.isActive = false;
+      this.isActive = false
     },
 
     reload(e) {
       //reload data, possibly with request, here
-      this.filtersArray = EXAMPLE_FILTERS;
+      this.filtersArray = EXAMPLE_FILTERS
     }
   }
-};
+}
 </script>
 
 <style lang="scss">

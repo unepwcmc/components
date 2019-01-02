@@ -89,8 +89,8 @@ export default {
       if (this.layerType === 'Raster') {
         dataset.layerIds.push(this.getDatasetId())
       } else {
-        for (let ii = 0; ii < this.cartoFilters.length ; ii++) {
-          dataset.layerIds.push(this.getDatasetId() + "_" + ii)
+        for (let i = 0; i < this.cartoFilters.length; i++) {
+          dataset.layerIds.push(this.getDatasetId() + "_" + i)
         }
       }
 
@@ -141,7 +141,6 @@ export default {
 
     createDataset(selected) {
       this.layerAdded = true
-      //TODO: extract
       if (this.layerType === "Raster") {
         eventHub.$emit("map-add-layer", {
           name: this.getDatasetId(),
@@ -153,12 +152,12 @@ export default {
         })
       } else {
         //Vector datasets contain multiple layers
-        for (let ii = 0; ii < this.cartoFilters.length; ii++) {
+        for (let i = 0; i < this.cartoFilters.length; i++) {
           let layer = {
-            filter: this.cartoFilters[ii],
+            filter: this.cartoFilters[i],
             tables: this.cartoTables,
-            colour: this.cartoColours[ii],
-            id: this.getDatasetId() + "_" + ii
+            colour: this.cartoColours[i],
+            id: this.getDatasetId() + "_" + i
           }
           eventHub.$emit("map-add-layer", {
             name: layer.id,

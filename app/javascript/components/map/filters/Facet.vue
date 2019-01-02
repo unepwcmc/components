@@ -17,10 +17,6 @@
 </template>
 
 <script>
-/**
- * A Facet component contains a list of datasets. When a facet is selected it should automatically open
- * the first dataset associated with it.
- */
 import Dataset from "./Dataset.vue";
 
 export default {

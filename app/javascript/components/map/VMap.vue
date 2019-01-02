@@ -16,14 +16,13 @@
  * Key events:
  *   map-add-layer: creates a single map layer with given id
  *   map-hide-layers: hide the layer with provided id (must already have been created)
- *
  */
-import * as turf from "@turf/turf";
+import * as turf from "@turf/turf"
 
-import LayersControl from "./helpers/layers-control.js";
-import { mixinCarto } from "./mixins/mixin-carto.js";
-import { eventHub } from "../../vue.js";
-import FilterPane from "./filters/FilterPane";
+import LayersControl from "./helpers/layers-control.js"
+import { mixinCarto } from "./mixins/mixin-carto.js"
+import { eventHub } from "../../vue.js"
+import FilterPane from "./filters/FilterPane"
 
 export default {
   mixins: [mixinCarto],
@@ -34,22 +33,21 @@ export default {
 
   data() {
     return {
-      //can use for map styling/funcitonality i.e. embedded vs full page or different filter types
       id: "map--type",
       currentDatasetId: null,
       mapboxToken:
         "pk.eyJ1IjoibGV2aWF0aGFuczE3IiwiYSI6ImNpeDd5YWIzZTAwM3Myb29jaHNleW02YTgifQ.KOR1dSr7sTbWUtXw4V6tpA",
       cartoUsername: "carbon-tool",
       cartoApiKey: "f7762e628586b3ff41a371b8e89ea0069e975299"
-    };
+    }
   },
 
   mounted() {
-    eventHub.$on("map-add-layer", this.addLayer);
-    eventHub.$on("map-hide-layers", this.hideLayers);
-    eventHub.$on("map-set-curr", this.setLayers);
+    eventHub.$on("map-add-layer", this.addLayer)
+    eventHub.$on("map-hide-layers", this.hideLayers)
+    eventHub.$on("map-set-curr", this.setLayers)
 
-    mapboxgl.accessToken = this.mapboxToken;
+    mapboxgl.accessToken = this.mapboxToken
 
     const map = new mapboxgl.Map({
       container: this.id,
@@ -57,40 +55,40 @@ export default {
       pitchWithRotate: false,
       center: [0, 30],
       zoom: 1
-    });
+    })
 
-    this.map = map;
+    this.map = map
 
     /** This event is for when mapbox style is changed on e.g. to 'streets' or 'basic'
      * so we reload all layers on the new map
      */
     map.on("style.load", () => {
-      eventHub.$emit("map-reload-layers", map.isStyleLoaded());
-    });
+      eventHub.$emit("map-reload-layers", map.isStyleLoaded())
+    })
 
     map.on("load", () => {
-      const navControl = new mapboxgl.NavigationControl();
-      const layersControl = new LayersControl();
+      const navControl = new mapboxgl.NavigationControl()
+      const layersControl = new LayersControl()
 
       const geocoderControl = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
         flyTo: true,
         zoom: false
-      });
+      })
 
       /** mapBox specific controls */
-      map.addControl(layersControl, "bottom-left");
-      map.addControl(navControl, "bottom-left");
-      map.addControl(geocoderControl, "top-left");
-    });
+      map.addControl(layersControl, "bottom-left")
+      map.addControl(navControl, "bottom-left")
+      map.addControl(geocoderControl, "top-left")
+    })
   },
 
   methods: {
     addLayer(layer) {
       if (layer.type === "Raster") {
-        this.addRasterLayer(layer);
+        this.addRasterLayer(layer)
       } else {
-        this.addVectorLayer(layer);
+        this.addVectorLayer(layer)
       }
     },
 
@@ -101,7 +99,7 @@ export default {
           type: "raster",
           url: `mapbox://${layer.mapbox.tileset}`,
           tileSize: 256
-        });
+        })
 
       // Generic tile endpoint
       } else if (layer.mapbox && layer.mapbox.endpoint) {
@@ -109,7 +107,7 @@ export default {
           type: "raster",
           tiles: [layer.mapbox.endpoint],
           tileSize: 256
-        });
+        })
       }
 
       this.map.addLayer({
@@ -122,27 +120,29 @@ export default {
         layout: {
           visibility: layer.visible ? "visible" : "none"
         }
-      });
-      this.map.setPaintProperty(layer.name, "raster-opacity", 0.5);
+      })
+
+      this.map.setPaintProperty(layer.name, "raster-opacity", 0.5)
     },
 
     addVectorLayer(layer) {
       if (layer.type === "Vector") {
-        this.createVectorShapeLayer(layer.visible, layer.carto);
+        this.createVectorShapeLayer(layer.visible, layer.carto)
       } else if (layer.type === "VectorLine") {
-        this.createVectorLineLayer(layer.visible, layer.carto);
+        this.createVectorLineLayer(layer.visible, layer.carto)
       }
     },
 
     createVectorShapeLayer(visible, carto) {
-      const tiles = this.createCartoTiles(carto);
+      const tiles = this.createCartoTiles(carto)
 
       tiles.getTiles(() => {
         this.map.addSource(carto.id, {
           type: "vector",
           tiles:
             tiles.mapProperties.mapProperties.metadata.tilejson.vector.tiles
-        });
+        })
+
         this.map.addLayer({
           id: carto.id,
           type: "fill",
@@ -157,18 +157,18 @@ export default {
           layout: {
             visibility: visible ? "visible" : "none"
           }
-        });
-      });
+        })
+      })
     },
     createVectorLineLayer(visible, carto) {
-      const tiles = this.createCartoTiles(carto);
+      const tiles = this.createCartoTiles(carto)
 
       tiles.getTiles(() => {
         this.map.addSource(carto.id, {
           type: "vector",
           tiles:
             tiles.mapProperties.mapProperties.metadata.tilejson.vector.tiles
-        });
+        })
         this.map.addLayer({
           id: carto.id,
           type: "line",
@@ -181,18 +181,18 @@ export default {
           layout: {
             visibility: visible ? "visible" : "none"
           }
-        });
-      });
+        })
+      })
     },
 
     createCartoTiles(carto) {
-      return this.createTiles(this.cartoUsername, this.cartoApiKey, carto);
+      return this.createTiles(this.cartoUsername, this.cartoApiKey, carto)
     },
 
     setLayers(dataset) {
       if (this.currentDatasetId !== dataset.id) {
-        eventHub.$emit("deselect-" + this.currentDatasetId);
-        this.currentDatasetId = dataset.id;
+        eventHub.$emit("deselect-" + this.currentDatasetId)
+        this.currentDatasetId = dataset.id
       }
 
       if (dataset.id !== null) { this.showLayers(dataset.layerIds) }
@@ -216,11 +216,11 @@ export default {
       const visibility = isVisible ? 'visible' : 'none'
 
       if (this.map.getLayer(layerId)) {
-        this.map.setLayoutProperty(layerId, "visibility", visibility);
+        this.map.setLayoutProperty(layerId, "visibility", visibility)
       }
     },
   }
-};
+}
 </script>
 
 <style lang='scss'>
@@ -244,7 +244,7 @@ export default {
   background-repeat: no-repeat;
   background-size: 26px 260px;
 
-  display: inline-block !important;
+  display: inline-block;
   float: left;
 }
 
