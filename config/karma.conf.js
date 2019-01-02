@@ -4,7 +4,7 @@ wpConf.devtool = "inline-source-map"
 module.exports = config => {
   config.set({
     basePath: "",
-    browsers:      ["HeadlessChrome"],
+    browsers:      ["ChromeHeadless"],
     files:         ["../app/javascript/components/**/*.spec.js"],
     frameworks:    ["mocha", "chai"],
     reporters:     ['spec', 'coverage'],
