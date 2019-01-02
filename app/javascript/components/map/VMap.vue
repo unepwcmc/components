@@ -14,7 +14,7 @@
  * This component just handles 'mapbox layers' on the map and knows nothing about our 'datasets' which may contain
  * multiple layers
  * Key events:
- *   map-add-layer: creates a single map layer with given id
+ *   map-create-layer: creates a single map layer with given id
  *   map-hide-layers: hide the layer with provided id (must already have been created)
  */
 import * as turf from "@turf/turf"
@@ -43,7 +43,7 @@ export default {
   },
 
   mounted() {
-    eventHub.$on("map-add-layer", this.addLayer)
+    eventHub.$on("map-create-layer", this.addLayer)
     eventHub.$on("map-hide-layers", this.hideLayers)
     eventHub.$on("map-set-curr", this.setLayers)
 

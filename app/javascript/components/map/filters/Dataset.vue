@@ -135,7 +135,7 @@ export default {
     createDataset(selected) {
       this.layerAdded = true
       getLayers(this.datasetId, this.config, selected).forEach(
-        layer => { eventHub.$emit("map-add-layer", layer) }
+        layer => { eventHub.$emit("map-create-layer", layer) }
       )
     }
   },
