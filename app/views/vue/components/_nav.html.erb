@@ -1,0 +1,30 @@
+<%
+pages = [
+  {
+    id: 1,
+    label: 'Parent',
+    url: '',
+    children: [
+      {
+        id: 1,
+        label: 'Child 1',
+        url: ''
+      },
+      {
+        id: 2,
+        label: 'Child 2',
+        url: ''
+      }
+    ]
+  },
+  {
+    id: 2,
+    label: 'Childless Parent',
+    url: ''
+  }
+].to_json
+%>
+
+<h2>VNav</h2>
+
+<v-nav :pages="<%= pages %>"></v-nav>
