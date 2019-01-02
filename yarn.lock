@@ -6657,6 +6657,11 @@ vue-turbolinks@^2.0.1:
   dependencies:
     vue "^2.2.4"
 
+vue2-touch-events@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/vue2-touch-events/-/vue2-touch-events-1.1.1.tgz#8f776d2b9ab6385bc8c4fcae6aa587314210a9b8"
+  integrity sha512-84pe0rPk7I7S73FM+428TIDTBJK1BobM2DkO1U6j0igpVYABbb9OMHfyl07OJNszbrAg1o+h4oTpUhMyVx2rcg==
+
 vue@^2.2.4, vue@^2.5.16:
   version "2.5.21"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.21.tgz#3d33dcd03bb813912ce894a8303ab553699c4a85"

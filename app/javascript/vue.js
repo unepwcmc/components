@@ -1,6 +1,7 @@
 // dependencies
 import TurbolinksAdapter from 'vue-turbolinks'
 import Vue from 'vue/dist/vue.esm'
+import Vue2TouchEvents from 'vue2-touch-events'
 
 // store
 import store from './store/store.js'
@@ -13,6 +14,8 @@ import Modal from './components/modal/Modal'
 import ModalTrigger from './components/modal/ModalTrigger'
 import ModalWrapper from './components/modal/ModalWrapper'
 
+import Tooltip from './components/tooltip/Tooltip'
+
 import VNav from './components/nav/VNav'
 
 import VSelect from './components/v-select/VSelect'
@@ -24,12 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if(document.getElementById('v-app')) {
 
     Vue.use(TurbolinksAdapter)
+    Vue.use(Vue2TouchEvents)
 
     document.addEventListener('turbolinks:load', () => {
       const app = new Vue({
         el: '#v-app',
         store,
-        components: { Accordion, AccordionItem, Modal, ModalTrigger, ModalWrapper, VNav, VSelect }
+        components: { Accordion, AccordionItem, Modal, ModalTrigger, ModalWrapper, Tooltip, VNav, VSelect }
       })
     })
   }
