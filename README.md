@@ -1,24 +1,17 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Getting up and running
+* bundle
+* yarn install
 
-Things you may want to cover:
+Terminal 1:
+* rails s
+Terminal 2:
+* webpack-dev-server
 
-* Ruby version
+## Runnning Tests
+Terminal 3:
+* npm test
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+This will run all tests in `**.spec.js` files contained within the `components` file using Headless Chrome.
+The tests run using a mix of Karma, Mocha and Chai and will re-run within the terminal on saved changes. Console logs are printed into the terminal.
