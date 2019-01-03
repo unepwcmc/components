@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="accordion">
     <slot></slot>
   </div>
 </template>
@@ -17,7 +17,7 @@
     },
 
     mounted () {
-      eventHub.$on('calltoggleAccordionContent', this.toggleAccordionContent)
+      eventHub.$on('call-toggle-accordion-content', this.toggleAccordionContent)
     },
 
     methods: {

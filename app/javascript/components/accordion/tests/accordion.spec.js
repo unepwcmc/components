@@ -1,12 +1,15 @@
-import Vue from 'vue/dist/vue.esm';
-import Accordion from '../Accordion.vue'
+import accordion from "./accordion"
 
-describe('Accordion', () => {
-  it('renders multiple accordion items', () => {
-    const Constructor = Vue.extend(Accordion)
+describe("Accordion", () => {
 
-    const comp = new Constructor().$mount()
+  beforeEach(() => {
+    this.instance = accordion.instance
+  })
 
-    expect(true).to.equal(false)
+  it("renders multiple accordion items", () => {
+    this.instance.$slots.default = [accordion.getAccordionItemNode(), accordion.getAccordionItemNode()]
+    this.instance.$mount()
+
+    expect(this.instance.$el.querySelectorAll('.accordion-item')).to.have.lengthOf(2)
   })
 })
