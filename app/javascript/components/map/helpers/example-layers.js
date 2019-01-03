@@ -42,10 +42,15 @@ const RASTER_DATASET = {
   carto_colors: null
 };
 
-export const EXAMPLE_DATASETS = [
+export const EXAMPLE_FILTERS = [
   {
     id: 1,
-    name: "A filter",
+    name: "Filter 1",
     datasets: [VECTOR_DATASET, VECTOR_LINE_DATASET, RASTER_DATASET]
-  }
+  },
+  {
+    id: 2,
+    name: "Filter 2",
+    datasets: [RASTER_DATASET]
+  },
 ];

@@ -11,7 +11,7 @@
 <script>
 import helpers from "../../../helpers/helpers.js"
 import { eventHub } from "../../../vue.js"
-import { EXAMPLE_DATASETS } from "../helpers/example-layers.js"
+import { EXAMPLE_FILTERS } from "../helpers/example-layers.js"
 import Filters from "./Filters.vue"
 
 export default {
@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       isActive: true,
-      filtersArray: EXAMPLE_DATASETS
+      filtersArray: EXAMPLE_FILTERS
     }
   },
 
@@ -62,7 +62,7 @@ export default {
 
     reload(e) {
       //reload data, possibly with request, here
-      this.filtersArray = EXAMPLE_DATASETS
+      this.filtersArray = EXAMPLE_FILTERS
     }
   }
 }

@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       selected: false,
-      layerAdded: false,
+      datasetLayersCreated: false,
       layerType: this.config.map_type,
       cartoColours: this.config.carto_colors,
       legend: this.config.legend,
@@ -80,18 +80,18 @@ export default {
       return `dataset_${this.id}_${this.name}`
     },
 
-    dataset() {
-      const dataset = {id: this.datasetId, layerIds: []}
+    layerGroup() {
+      const layerGroup = {id: this.datasetId, layerIds: []}
 
       if (this.layerType === 'Raster') {
-        dataset.layerIds.push(this.datasetId)
+        layerGroup.layerIds.push(this.datasetId)
       } else {
         for (let i = 0; i < this.layerCount; i++) {
-          dataset.layerIds.push(this.datasetId + "_" + i)
+          layerGroup.layerIds.push(this.datasetId + "_" + i)
         }
       }
 
-      return dataset
+      return layerGroup
     }
   },
 
@@ -109,7 +109,7 @@ export default {
     },
 
     reloadDataset() {
-      this.layerAdded = false
+      this.datasetLayersCreated = false
       if(this.selected) {this.addDataset(true)}
     },
 
@@ -119,21 +119,21 @@ export default {
     },
 
     createDatasetIfNecessary(forceCreate=false) {
-      if (!this.layerAdded || forceCreate) {
+      if (!this.datasetLayersCreated || forceCreate) {
         this.createDataset(this.selected)
       }
     },
 
     setCurrentDataset() {
-      eventHub.$emit("map-set-curr", this.dataset)
+      eventHub.$emit("map-set-curr", this.layerGroup)
     },
 
     hideDatasetLayers() {
-      eventHub.$emit("map-hide-layers", this.dataset.layerIds)
+      eventHub.$emit("map-hide-layers", this.layerGroup.layerIds)
     },
 
     createDataset(selected) {
-      this.layerAdded = true
+      this.datasetLayersCreated = true
       getLayers(this.datasetId, this.config, selected).forEach(
         layer => { eventHub.$emit("map-create-layer", layer) }
       )
