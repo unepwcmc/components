@@ -44,7 +44,7 @@
 
     methods: {
       toggleAccordionContent () {
-        eventHub.$emit('call-toggle-accordion-content', this.id);
+        eventHub.$emit('call-toggle-accordion-content', this.id)
       }
     }
   }
