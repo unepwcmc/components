@@ -157,7 +157,7 @@ export default {
   },
 
   watch: {
-    selected: function (newSelectedOption) {
+    selected (newSelectedOption) {
       this.selectedInternal = newSelectedOption
     }
   }
