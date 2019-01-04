@@ -53,7 +53,7 @@ describe("Accordion", () => {
     
     expect(isElementHidden(contentWrapper)).to.equal(true)
 
-    this.accordion.getItemToggleElement().click()
+    this.accordion.toggleItem()
 
     this.instance.$nextTick().then(() => {
       expect(isElementHidden(contentWrapper)).to.equal(false)
@@ -74,7 +74,7 @@ describe("Accordion", () => {
     this.instance.$mount()
     const contentWrapper = this.accordion.getItemContentWrapperElement()
     
-    this.accordion.getItemToggleElement().click()
+    this.accordion.toggleItem()
     
     this.instance.$nextTick().then(() => {
       console.log(this.instance.$children[0].$data)
@@ -96,14 +96,14 @@ describe("Accordion", () => {
     this.instance.$slots.default = [this.accordion.getAccordionItemNode()]
     this.instance.$mount()
 
-    this.accordion.getItemToggleElement().click()
+    this.accordion.toggleItem()
 
     const toggleIcon = this.accordion.getItemToggleIconElement()
     expect(toggleIcon.textContent).to.equal('+')
 
     this.instance.$nextTick().then(() => {
       expect(toggleIcon.textContent).to.equal('-')
-      this.accordion.getItemToggleElement().click()
+      this.accordion.toggleItem()
     }).then(() => {
       this.instance.$nextTick().then(() => {
         expect(toggleIcon.textContent).to.equal('+')
