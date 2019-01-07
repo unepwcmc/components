@@ -2,6 +2,9 @@ import Accordion from "../Accordion.vue"
 import AccordionItem from "../AccordionItem.vue"
 import TestHelpers from "../../../utils/vue-test-helpers";
 import PageHelpers from "./test-helpers";
+import Vue from 'vue/dist/vue.esm'
+const $ = require('jquery');
+
 
 const helpers = new TestHelpers(PageHelpers)
 
@@ -10,7 +13,7 @@ describe("Accordion", () => {
   const ACCORDION_ITEM_TEXT = 'Accordion Item Content'
   const ACCORDION_ITEM_HTML_CONTENT = `<div class="accordion-item__slot-content">${ACCORDION_ITEM_TEXT}</div>`
 
-  test.only("renders multiple accordion items using slots", () => {
+  test("renders multiple accordion items using slots", () => {
     const wrapper = helpers.shallowInitializeWrapper(Accordion, {
       slots: {
         default: [ACCORDION_ITEM, ACCORDION_ITEM]
@@ -30,8 +33,8 @@ describe("Accordion", () => {
       }
     })
     
-    expect(wrapper.firstItemContent().contains('div')).toBe(true)
-    expect(wrapper.firstItemContent().find('div').text()).toBe(ACCORDION_ITEM_TEXT)
+    expect(wrapper.itemContent().contains('div')).toBe(true)
+    expect(wrapper.itemContent().find('div').text()).toBe(ACCORDION_ITEM_TEXT)
   }),
 
   test("renders accordion item child in accordion-item__content div", () => {
@@ -44,8 +47,8 @@ describe("Accordion", () => {
       }
     })
     
-    expect(wrapper.firstItemContent().contains('div')).toBe(true)
-    expect(wrapper.firstItemContent().find('div').text()).toBe('Accordion Item Content')
+    expect(wrapper.itemContent().contains('div')).toBe(true)
+    expect(wrapper.itemContent().find('div').text()).toBe('Accordion Item Content')
   }),
 
   test("renders the accordion item title when given as a prop", () => {
@@ -56,7 +59,7 @@ describe("Accordion", () => {
       }
     })
 
-    expect(wrapper.firstItemTitleText()).toBe('Test title')
+    expect(wrapper.itemTitleText()).toBe('Test title')
   })
 
   test("initially does not show the accordion item content", () => {
@@ -72,7 +75,7 @@ describe("Accordion", () => {
       }
     })
 
-    expect(wrapper.firstItemContentWrapper().isVisible()).toBe(false)
+    expect(wrapper.itemContentWrapper().isVisible()).toBe(false)
   })
 
   test("toggles accordion item content when clicking on the item toggle", () => {
@@ -88,11 +91,11 @@ describe("Accordion", () => {
       }
     })
 
-    expect(wrapper.firstItemContentWrapper().isVisible()).toBe(false)
+    expect(wrapper.itemContentWrapper().isVisible()).toBe(false)
 
-    wrapper.toggleFirstItem()
+    wrapper.toggleItem()
 
-    expect(wrapper.firstItemContentWrapper().isVisible()).toBe(true)
+    expect(wrapper.itemContentWrapper().isVisible()).toBe(true)
   })
 
   test("initially shows accordion item content if open prop is true", () => {
@@ -109,7 +112,7 @@ describe("Accordion", () => {
       }
     })
     
-    expect(wrapper.firstItemContentWrapper().isVisible()).toBe(true)
+    expect(wrapper.itemContentWrapper().isVisible()).toBe(true)
   })
 
   test("hides accordion item content when clicking on an active item toggle", () => {
@@ -126,9 +129,9 @@ describe("Accordion", () => {
       }
     })
 
-    wrapper.toggleFirstItem()
+    wrapper.toggleItem()
 
-    expect(wrapper.firstItemContentWrapper().isVisible()).toBe(false)
+    expect(wrapper.itemContentWrapper().isVisible()).toBe(false)
   })
 
   test("shows inactive accordion toggle icon when accordion is inactive", () => {
@@ -144,7 +147,7 @@ describe("Accordion", () => {
       }
     })
 
-    expect(wrapper.firstItemToggleIcon().text()).toBe('+')
+    expect(wrapper.toggleItemIcon().text()).toBe('+')
   })
 
   test("shows active accordion toggle icon when accordion is toggled open", () => {
@@ -160,11 +163,42 @@ describe("Accordion", () => {
       }
     })
 
-    wrapper.toggleFirstItem()
+    wrapper.toggleItem()
 
-    expect(wrapper.firstItemToggleIcon().text()).toBe('-')
+    expect(wrapper.toggleItemIcon().text()).toBe('-')
+  })
+
+  //FIXME: can't seem to find a way of adding multiple custom components as slots with props.
+  // scopedSlots doesn't take arrays and slots doesn't take a function using $createElement
+  test.only("correctly handles toggling when switching between accordion items", () => {
+    const AccordionItem1 = $.extend(true, {}, AccordionItem);
+    const AccordionItem2 = $.extend(true, {}, AccordionItem);
+
+    AccordionItem1.props.id = {
+      default: '1',
+      required: false
+    }
+    AccordionItem2.props.id = {
+      default: '2',
+      required: false
+    }
+    AccordionItem2.props.open = {
+      default: true,
+      required: false
+    }
+
+    const wrapper = helpers.initializeWrapper(Accordion, {
+      slots: {
+        default: [AccordionItem1, AccordionItem2]
+      },
+    })
+    
+    expect(wrapper.itemContentWrapper(0).isVisible()).toBe(false)
+    expect(wrapper.itemContentWrapper(1).isVisible()).toBe(true)
+
+    wrapper.toggleItem(0)
+
+    expect(wrapper.itemContentWrapper(0).isVisible()).toBe(true)
+    expect(wrapper.itemContentWrapper(1).isVisible()).toBe(false)
   })
 })
-
-//TODO: Test the following
-//selecting whilst another item is selected
