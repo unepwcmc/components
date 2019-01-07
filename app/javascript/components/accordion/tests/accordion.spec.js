@@ -1,9 +1,7 @@
 import Accordion from "../Accordion.vue"
 import AccordionItem from "../AccordionItem.vue"
-import TestHelpers from "../../../utils/vue-test-helpers";
-import PageHelpers from "./test-helpers";
-import Vue from 'vue/dist/vue.esm'
-const $ = require('jquery');
+import TestHelpers from "../../../utils/vue-test-helpers"
+import PageHelpers from "./test-helpers"
 
 
 const helpers = new TestHelpers(PageHelpers)
@@ -171,21 +169,8 @@ describe("Accordion", () => {
   //FIXME: can't seem to find a way of adding multiple custom components as slots with props.
   // scopedSlots doesn't take arrays and slots doesn't take a function using $createElement
   test.only("correctly handles toggling when switching between accordion items", () => {
-    const AccordionItem1 = $.extend(true, {}, AccordionItem);
-    const AccordionItem2 = $.extend(true, {}, AccordionItem);
-
-    AccordionItem1.props.id = {
-      default: '1',
-      required: false
-    }
-    AccordionItem2.props.id = {
-      default: '2',
-      required: false
-    }
-    AccordionItem2.props.open = {
-      default: true,
-      required: false
-    }
+    const AccordionItem1 = helpers.addDefaultProp(AccordionItem, [['id', '1']])
+    const AccordionItem2 = helpers.addDefaultProp(AccordionItem, [['id', '2'], ['open', true]])
 
     const wrapper = helpers.initializeWrapper(Accordion, {
       slots: {
