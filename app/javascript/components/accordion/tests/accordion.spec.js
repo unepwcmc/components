@@ -1,124 +1,170 @@
-import Accordion from "./accordion"
-// import { shallowMount } from '@vue/test-utils'
-import { isElementHidden } from "../../../utils/test-helpers";
+import Accordion from "../Accordion.vue"
+import AccordionItem from "../AccordionItem.vue"
+import TestHelpers from "../../../utils/vue-test-helpers";
+import PageHelpers from "./test-helpers";
+
+const helpers = new TestHelpers(PageHelpers)
 
 describe("Accordion", () => {
-  let accordion;
-  let instance;
+  const ACCORDION_ITEM = '<div class="accordion-item"></div>'
+  const ACCORDION_ITEM_TEXT = 'Accordion Item Content'
+  const ACCORDION_ITEM_HTML_CONTENT = `<div class="accordion-item__slot-content">${ACCORDION_ITEM_TEXT}</div>`
 
-  beforeEach(() => {
-    accordion = new Accordion()
-    instance = accordion.instance
+  test.only("renders multiple accordion items using slots", () => {
+    const wrapper = helpers.shallowInitializeWrapper(Accordion, {
+      slots: {
+        default: [ACCORDION_ITEM, ACCORDION_ITEM]
+      }
+    })
+
+    expect(wrapper.accordionItems()).toHaveLength(2)
   })
 
-  // it.only("uses test-utils successfully", () => {
-  //   const wrapper = shallowMount(Accordion)
-  // })
-
-  test("renders multiple accordion items using slots", () => {
-    instance.$slots.default = [accordion.getAccordionItemNode(), accordion.getAccordionItemNode()]
-    instance.$mount()
-
-    expect(accordion.getItems()).toHaveLength(2)
-  })
-
-  it("renders accordion item child in accordion-item__content div", () => {
-    const itemContentNodeArgs = ["div", "Accordion Item Content"]
-
-    instance.$slots.default = [accordion.getAccordionItemNode({itemContentNodeArgs})]
-    instance.$mount()
-
-    const contentWrapper = accordion.getItemContentElement()
-    expect(contentWrapper.children).toHaveLength(1)
-
-    const content = contentWrapper.children[0]
-    expect(content.tagName).toBe('DIV')
-    expect(content.textContent).toBe('Accordion Item Content')
+  test("renders accordion item child in accordion-item__content div", () => {
+    const wrapper = helpers.shallowInitializeWrapper(AccordionItem, {
+      propsData: {
+        id: '1'
+      },
+      slots: {
+        default: [ACCORDION_ITEM_HTML_CONTENT]
+      }
+    })
+    
+    expect(wrapper.firstItemContent().contains('div')).toBe(true)
+    expect(wrapper.firstItemContent().find('div').text()).toBe(ACCORDION_ITEM_TEXT)
   }),
 
-  it("renders the accordion item title when given as a prop", () => {
-    instance.$slots.default = [accordion.getAccordionItemNode({title: 'Test title'})]
-    instance.$mount()
-
-    const titleElement = accordion.getItemTitleElement()
-
-    expect(titleElement.textContent).toBe('Test title')
-  })
-
-  it("initially does not show the accordion item content", () => {
-    instance.$slots.default = [accordion.getAccordionItemNode()]
-    instance.$mount()
-
-    const contentWrapper = accordion.getItemContentWrapperElement()
-    expect(isElementHidden(contentWrapper)).toBe(true)
-  })
-
-  it("toggles accordion item content when clicking on the item toggle", done => {
-    instance.$slots.default = [accordion.getAccordionItemNode()]
-    instance.$mount()
-    const contentWrapper = accordion.getItemContentWrapperElement()
-    
-    expect(isElementHidden(contentWrapper)).toBe(true)
-
-    accordion.toggleItem()
-
-    instance.$nextTick().then(() => {
-      expect(isElementHidden(contentWrapper)).toBe(false)
-    }).then(done)
-  })
-
-  it("initially shows accordion item content if open prop is true", () => {
-    instance.$slots.default = [accordion.getAccordionItemNode({open: true})]
-    instance.$mount()
-    const contentWrapper = accordion.getItemContentWrapperElement()
-    
-    expect(isElementHidden(contentWrapper)).toBe(false)
-  })
-
-  //FIXME: have fun!
-  it.skip("hides accordion item content when clicking on an active item toggle", done => {
-    instance.$slots.default = [accordion.getAccordionItemNode({open: true})]
-    instance.$mount()
-    const contentWrapper = accordion.getItemContentWrapperElement()
-    
-    accordion.toggleItem()
-    
-    instance.$nextTick().then(() => {
-      console.log('isActive', instance.$children[0].$data.isActive)
-      console.log('isHidden', isElementHidden(contentWrapper))
-      expect(isElementHidden(contentWrapper)).toBe(true)
-    }).then(done)
-  })
-
-  it("shows inactive accordion toggle icon when accordion is inactive", () => {
-    instance.$slots.default = [accordion.getAccordionItemNode()]
-    instance.$mount()
-
-    const toggleIcon = accordion.getItemToggleIconElement()
-    expect(toggleIcon.textContent).toBe('+')
-  })
-
-  // This doesn't really need to tested with two clicks, but it's an example of nested nextTicks
-  it("shows active accordion toggle icon when accordion is toggled open", done => {
-    instance.$slots.default = [accordion.getAccordionItemNode()]
-    instance.$mount()
-
-    accordion.toggleItem()
-
-    const toggleIcon = accordion.getItemToggleIconElement()
-    expect(toggleIcon.textContent).toBe('+')
-
-    instance.$nextTick().then(() => {
-      expect(toggleIcon.textContent).toBe('-')
-      accordion.toggleItem()
-    }).then(() => {
-      instance.$nextTick().then(() => {
-        expect(toggleIcon.textContent).toBe('+')
-      }).then(done)
+  test("renders accordion item child in accordion-item__content div", () => {
+    const wrapper = helpers.shallowInitializeWrapper(AccordionItem, {
+      propsData: {
+        id: '1'
+      },
+      slots: {
+        default: [ACCORDION_ITEM_HTML_CONTENT]
+      }
     })
+    
+    expect(wrapper.firstItemContent().contains('div')).toBe(true)
+    expect(wrapper.firstItemContent().find('div').text()).toBe('Accordion Item Content')
+  }),
+
+  test("renders the accordion item title when given as a prop", () => {
+    const wrapper = helpers.shallowInitializeWrapper(AccordionItem, {
+      propsData: {
+        id: '1',
+        title: 'Test title'
+      }
+    })
+
+    expect(wrapper.firstItemTitleText()).toBe('Test title')
+  })
+
+  test("initially does not show the accordion item content", () => {
+    const wrapper = helpers.initializeWrapper(Accordion, {
+      scopedSlots: {
+        default: function () { 
+          return this.$createElement(AccordionItem, {
+            props: {
+              id: '1'
+            }
+          }) 
+        }
+      }
+    })
+
+    expect(wrapper.firstItemContentWrapper().isVisible()).toBe(false)
+  })
+
+  test("toggles accordion item content when clicking on the item toggle", () => {
+    const wrapper = helpers.initializeWrapper(Accordion, {
+      scopedSlots: {
+        default: function () { 
+          return this.$createElement(AccordionItem, {
+            props: {
+              id: '1'
+            }
+          }) 
+        }
+      }
+    })
+
+    expect(wrapper.firstItemContentWrapper().isVisible()).toBe(false)
+
+    wrapper.toggleFirstItem()
+
+    expect(wrapper.firstItemContentWrapper().isVisible()).toBe(true)
+  })
+
+  test("initially shows accordion item content if open prop is true", () => {
+    const wrapper = helpers.initializeWrapper(Accordion, {
+      scopedSlots: {
+        default: function () { 
+          return this.$createElement(AccordionItem, {
+            props: {
+              id: '1',
+              open: true
+            }
+          }) 
+        }
+      }
+    })
+    
+    expect(wrapper.firstItemContentWrapper().isVisible()).toBe(true)
+  })
+
+  test("hides accordion item content when clicking on an active item toggle", () => {
+    const wrapper = helpers.initializeWrapper(Accordion, {
+      scopedSlots: {
+        default: function () { 
+          return this.$createElement(AccordionItem, {
+            props: {
+              id: '1',
+              open: true
+            }
+          }) 
+        }
+      }
+    })
+
+    wrapper.toggleFirstItem()
+
+    expect(wrapper.firstItemContentWrapper().isVisible()).toBe(false)
+  })
+
+  test("shows inactive accordion toggle icon when accordion is inactive", () => {
+    const wrapper = helpers.initializeWrapper(Accordion, {
+      scopedSlots: {
+        default: function () { 
+          return this.$createElement(AccordionItem, {
+            props: {
+              id: '1'
+            }
+          }) 
+        }
+      }
+    })
+
+    expect(wrapper.firstItemToggleIcon().text()).toBe('+')
+  })
+
+  test("shows active accordion toggle icon when accordion is toggled open", () => {
+    const wrapper = helpers.initializeWrapper(Accordion, {
+      scopedSlots: {
+        default: function () { 
+          return this.$createElement(AccordionItem, {
+            props: {
+              id: '1'
+            }
+          }) 
+        }
+      }
+    })
+
+    wrapper.toggleFirstItem()
+
+    expect(wrapper.firstItemToggleIcon().text()).toBe('-')
   })
 })
 
-// //TODO: Test the following
-// //deselecting accordionitem
-// //selecting whilst another item is selected
+//TODO: Test the following
+//selecting whilst another item is selected

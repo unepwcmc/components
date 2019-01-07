@@ -1,3 +1,14 @@
-import Vue from "vue/dist/vue.esm"
+import { mount, shallowMount } from '@vue/test-utils'
 
-export const getComponentInstance = Component => new (Vue.extend(Component))()
+const getIntializeWrapper = (pageHelpers, isShallow) => ( ...wrapperOptions) => {
+  const wrapper = isShallow ? shallowMount(...wrapperOptions) : mount(...wrapperOptions)
+
+  Object.assign(wrapper, new pageHelpers(wrapper))
+  
+  return wrapper
+}
+
+export default pageHelpers => ({
+  shallowInitializeWrapper: getIntializeWrapper(pageHelpers, true),
+  initializeWrapper: getIntializeWrapper(pageHelpers, false),
+})

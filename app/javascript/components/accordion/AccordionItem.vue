@@ -1,7 +1,7 @@
 <template>
   <div class="accordion-item">
-    <a class="accordion-item__title flex flex-h-between" @click="toggleAccordionContent()">
-      <span>{{ title }}</span>
+    <a class="accordion-item__toggle flex flex-h-between" @click="toggleAccordionContent()">
+      <span class="accordion-item__title">{{ title }}</span>
       <i class="material-icons">{{ arrow }}</i>
     </a>
     
@@ -70,7 +70,7 @@
   }
 
   .accordion-item {
-    &__title {
+    &__toggle {
       cursor: pointer;
     }
 
