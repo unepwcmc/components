@@ -64,7 +64,7 @@ describe("Accordion", () => {
 
     instance.$nextTick().then(() => {
       expect(isElementHidden(contentWrapper)).toBe(false)
-    }).then(done, done)
+    }).then(done)
   })
 
   it("initially shows accordion item content if open prop is true", () => {
@@ -87,7 +87,7 @@ describe("Accordion", () => {
       console.log('isActive', instance.$children[0].$data.isActive)
       console.log('isHidden', isElementHidden(contentWrapper))
       expect(isElementHidden(contentWrapper)).toBe(true)
-    }).then(done, done)
+    }).then(done)
   })
 
   it("shows inactive accordion toggle icon when accordion is inactive", () => {
@@ -114,7 +114,7 @@ describe("Accordion", () => {
     }).then(() => {
       instance.$nextTick().then(() => {
         expect(toggleIcon.textContent).toBe('+')
-      }).then(done, done)
+      }).then(done)
     })
   })
 })

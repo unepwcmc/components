@@ -11,9 +11,9 @@ Terminal 2:
 
 ## Runnning Tests
 Terminal 3:
-* npm test
+* yarn test
 
-This will run all tests in `**.spec.js` files contained within the `components` file using Headless Chrome.
-The tests run using a mix of Karma, Mocha and Chai and will re-run within the terminal on saved changes. Console logs are printed into the terminal.
+This will run all tests in `**.spec.js` files contained within the `components` file.
+The tests run using Jest and will re-run within the terminal on saved changes. Console logs are printed into the terminal.
 
-Managing the promises with nextTick etc is not very tidy... TODO: look into another testing framework that does this better than mocha?
+If you are using imports from node_modules, make sure to add the modules (as exceptions) to transformIgnorePatterns in package.json, to make sure these are transpiled.
