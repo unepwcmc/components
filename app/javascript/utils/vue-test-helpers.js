@@ -1,19 +1,20 @@
 import { mount, shallowMount } from '@vue/test-utils'
 const $ = require('jquery')
 
-const getIntializeWrapper = (pageHelpers, isShallow) => ( ...wrapperOptions) => {
+const generateIntializeWrapper = (PageHelpers, isShallow) => ( ...wrapperOptions) => {
   const wrapper = isShallow ? shallowMount(...wrapperOptions) : mount(...wrapperOptions)
 
-  Object.assign(wrapper, new pageHelpers(wrapper))
+  Object.assign(wrapper, new PageHelpers(wrapper))
   
   return wrapper
 }
 
-export default pageHelpers => ({
-  shallowInitializeWrapper: getIntializeWrapper(pageHelpers, true),
+export default PageHelpers => ({
+  shallowInitializeWrapper: generateIntializeWrapper(PageHelpers, true),
 
-  initializeWrapper: getIntializeWrapper(pageHelpers, false),
-  
+  initializeWrapper: generateIntializeWrapper(PageHelpers, false),
+
+  //temp solution to not being able to define props for multiple children in one slot
   addDefaultProp: (Component, props) => {
     const newComp = $.extend(true, {}, Component)
     
