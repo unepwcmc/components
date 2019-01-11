@@ -22,6 +22,9 @@ import VNav from './components/nav/VNav'
 
 import VSelect from './components/v-select/VSelect'
 
+import defineCustomAriaElements from './helpers/aria-definitions'
+defineCustomAriaElements()
+
 // create event hub and export so that it can be imported into .vue files
 export const eventHub = new Vue()
 

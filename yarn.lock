@@ -1790,6 +1790,13 @@ babel-plugin-transform-class-properties@^6.24.1:
     babel-runtime "^6.22.0"
     babel-template "^6.24.1"
 
+babel-plugin-transform-custom-element-classes@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-custom-element-classes/-/babel-plugin-transform-custom-element-classes-0.1.0.tgz#4414dcec23f96815041d850b757baba83dd8c542"
+  integrity sha1-RBTc7CP5aBUEHYULdXurqD3YxUI=
+  dependencies:
+    babel-template "^6.16.0"
+
 babel-plugin-transform-es2015-arrow-functions@^6.22.0:
   version "6.22.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-arrow-functions/-/babel-plugin-transform-es2015-arrow-functions-6.22.0.tgz#452692cb711d5f79dc7f85e440ce41b9f244d221"
