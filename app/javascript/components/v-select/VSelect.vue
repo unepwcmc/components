@@ -3,16 +3,14 @@
     <input type="hidden" :name="config.id" :id="config.id" v-model="selectedInternal.name" />
 
     <div class="v-select__label hover--pointer">
-      <label :for="toggleId" class="v-select__selection">
-        {{ config.label }}
-      </label>
+      <label :for="toggleId" class="v-select__selection">{{ config.label }}</label>
       <slot name="label-icon"></slot>
     </div>
 
     <button
       class="v-select__toggle"
-      :id="toggleId"
       :class="{'v-select__toggle--active': isActive}"
+      :id="toggleId"
       aria-haspopup="true"
       :aria-controls="dropdownId"
       :disabled="isDisabled"
@@ -23,9 +21,9 @@
 
     <ul 
       v-show="isActive" 
-      :role="popupRole" 
       :id="dropdownId" 
       :aria-multiselectable="isMultiselect" 
+      :role="popupRole" 
       class="v-select__dropdown">
 
       <li
@@ -34,13 +32,12 @@
         :key="option.id">
         <input
           :class="defaultInputClass"
-          :type="inputType"
           :id="getOptionInputId(option)"
+          :type="inputType"
           :value="option"
           v-model="selectedInternal"
           @change="handleOptionChange(option)">
-        <span
-          :class="getInputClasses(option)"></span>
+        <span :class="getInputClasses(option)"></span>
         <label :for="getOptionInputId(option)">{{ option.name }}</label>
       </li>
 
