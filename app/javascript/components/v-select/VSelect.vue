@@ -2,11 +2,9 @@
   <div class="v-select relative hover--pointer" :class="{'v-select--disabled': isDisabled}">
     <input type="hidden" :name="config.id" :id="config.id" v-model="selectedInternal.name" />
 
-<!-- move label offscreen rather than not displaying -->
-    <div
-      v-if="config.label"
-      class="v-select__label hover--pointer">
-      <label for="v-select-toggle" class="v-select__selection">
+<!-- TODO: move label offscreen rather than not displaying -->
+    <div class="v-select__label hover--pointer">
+      <label :for="toggleId" class="v-select__selection">
         {{ config.label }}
       </label>
       <slot name="label-icon"></slot>
@@ -16,18 +14,22 @@
       class="v-select__toggle"
       :id="toggleId"
       :class="{'v-select__toggle--active': isActive}"
-      aria-haspopup="listbox"
+      :aria-haspopup="true"
+      :aria-controls="dropdownId"
       @click="toggleSelect">
       <span class="v-select__dropdown-text">{{ selectionMessage }}</span>
       <i class="v-select__drop-arrow arrow-svg"/>
     </button>
 
-    <ul v-show="isActive" role="listbox" :aria-multiselectable="isMultiselect" class="v-select__dropdown">
+    <ul 
+      v-show="isActive" 
+      :role="popupRole" 
+      :id="dropdownId" 
+      :aria-multiselectable="isMultiselect" 
+      class="v-select__dropdown">
 
       <template v-if="isMultiselect">
         <li
-          role="option"
-          :aria-selected="isSelected(option)"
           class="v-select__option"
           v-for="option in options"
           :key="option.id">
@@ -47,7 +49,6 @@
 
       <template v-else>
         <li
-          role="option"
           class="v-select__option"
           v-for="option in options"
           :key="option.id">
@@ -63,9 +64,10 @@
             :class="{'v-select__radio-button--active': isSelected(option)}"></span>
           <label :for="getOptionInputId(option)">{{ option.name }}</label>
         </li>
-      </template>   
+      </template>
 
-    </ul>
+    </ul> 
+
   </div>
 </template>
 
@@ -95,7 +97,9 @@ export default {
       isActive: false,
       isMultiselect: this.config.isMultiple,
       selectedInternal: null,
-      toggleId: this.config.id + '-v-select-toggle'
+      dropdownId: this.config.id + '-v-select-dropdown',
+      toggleId: this.config.id + '-v-select-toggle',
+      popupRole: this.config.isMultiple ? 'group' : 'radiogroup'
     }
   },
 
@@ -155,6 +159,13 @@ export default {
     })
 
     this.initializeSelectedInternal()
+  },
+  
+  mounted () {
+    this.$el.addEventListener('keydown', e => {
+      ESCAPE_KEYCODE  = 27
+      if (this.isActive && e.keyCode === ESCAPE_KEYCODE) { this.closeSelect() }
+    })
   },
 
   watch: {
