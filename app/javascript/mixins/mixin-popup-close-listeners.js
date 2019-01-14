@@ -3,8 +3,6 @@ export default {
     window.addEventListener('click', e => {
       if (!this.$el.contains(e.target)) { this.closeCallback() }
     })
-
-    this.initializeSelectedInternal()
   },
   
   mounted () {
