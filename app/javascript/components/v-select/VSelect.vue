@@ -1,73 +1,68 @@
 <template>
-  <div class="ui-select relative hover--pointer" :class="{'ui-select--disabled': isDisabled}">
+  <div class="v-select relative hover--pointer" :class="{'v-select--disabled': isDisabled}">
+    <input type="hidden" :name="hiddenId" :id="hiddenId" v-model="selectedInternal.name" />
 
-    <button
-      aria-haspopup="true"
-      class="ui-select__toggle-wrapper" 
-      @click="toggleSelect">
-
-      <div 
-        v-if="config.label"
-        class="ui-select__label hover--pointer">
-        <label :for="hiddenId" class="ui-select__selection">
-          {{ config.label }}
-        </label>
-        <slot name="label-icon"></slot>
-      </div>
-
-      <div
-        class="ui-select__dropdown-toggle" 
-        :class="{'ui-select__dropdown-toggle--active': isActive}">
-        <span class="ui-select__dropdown-text">{{ selectionMessage }}</span>
-        <i class="ui-select__drop-arrow arrow-svg"/>
-      </div>
-
-    </button>
-
-    <div v-show="isActive" class="ui-select__dropdown">
-      <aria-listbox class="ui-select__options-wrapper">
-
-        <template v-if="isMultiselect">
-          <div
-            class="ui-select__option"
-            v-for="option in options"
-            :key="option.id">
-            <input
-              class="ui-select__default-checkbox"
-              type="checkbox"
-              :id="option.id"
-              :value="option"
-              v-model="selectedInternal"
-              @change="optionClick(option)">
-            <div
-              class="ui-select__option-label">
-              <span
-                class="ui-select__checkbox" 
-                :class="{'ui-select__checkbox--active': isSelected(option.id)}"></span>
-              <label :for="option.id">{{ option.name }}</label>
-            </div>
-          </div>
-        </template>
-
-        <template v-else>
-          <div
-            class="ui-select__option"
-            v-for="option in options"
-            :key="option.id"
-            @click="optionClick(option)">
-            <span
-              :aria-labelledby="`${option.id}_radio`"
-              role="radio"
-              class="ui-select__radio-button"
-              :class="{'ui-select__radio-button--active': isSelected(option.id)}"></span>
-            <span :id="`${option.id}_radio`">{{ option.name }}</span>
-          </div>
-        </template>
-
-      </aria-listbox>
+<!-- move label offscreen rather than not displaying -->
+    <div
+      v-if="config.label"
+      class="v-select__label hover--pointer">
+      <label for="v-select-toggle" class="v-select__selection">
+        {{ config.label }}
+      </label>
+      <slot name="label-icon"></slot>
     </div>
 
-    <input type="hidden" :name="hiddenId" :id="hiddenId" v-model="selectedInternal.name" />
+    <button
+      class="v-select__toggle"
+      id="v-select-toggle"
+      :class="{'v-select__toggle--active': isActive}"
+      aria-haspopup="listbox"
+      @click="toggleSelect">
+      <span class="v-select__dropdown-text">{{ selectionMessage }}</span>
+      <i class="v-select__drop-arrow arrow-svg"/>
+    </button>
+
+    <ul v-show="isActive" role="listbox" class="v-select__dropdown">
+
+      <template v-if="isMultiselect">
+        <li
+          role="option"
+          class="v-select__option"
+          v-for="option in options"
+          :key="option.id">
+          <input
+            class="v-select__default-checkbox"
+            type="checkbox"
+            :id="option.id"
+            :value="option"
+            v-model="selectedInternal"
+            @change="optionClick(option)">
+          <div
+            class="v-select__option-label">
+            <span
+              class="v-select__checkbox" 
+              :class="{'v-select__checkbox--active': isSelected(option.id)}"></span>
+            <label :for="option.id">{{ option.name }}</label>
+          </div>
+        </li>
+      </template>
+
+      <template v-else>
+        <li
+          class="v-select__option"
+          v-for="option in options"
+          :key="option.id"
+          @click="optionClick(option)">
+          <span
+            :aria-labelledby="`${option.id}_radio`"
+            role="radio"
+            class="v-select__radio-button"
+            :class="{'v-select__radio-button--active': isSelected(option.id)}"></span>
+          <span :id="`${option.id}_radio`">{{ option.name }}</span>
+        </li>
+      </template>
+
+    </ul>
   </div>
 </template>
 
@@ -146,10 +141,10 @@ export default {
       if (this.isMultiselect) {
         const selectedNames = this.selectedInternal.map(option => option.name)
 
-        return selectedNames.length ? selectedNames.join(', ') : DEFAULT_SELECT_MESSAGE
+        return selectedNames.length ? selectedNames.join(', ') : DEFAULT_MULTISELECT_MESSAGE
       }
 
-      return this.selectedInternal.id === UNDEFINED_ID ? DEFAULT_MULTISELECT_MESSAGE : this.selectedInternal.name
+      return this.selectedInternal.id === UNDEFINED_ID ? DEFAULT_SELECT_MESSAGE : this.selectedInternal.name
     }
   },
 
@@ -178,7 +173,7 @@ $black: #000000;
   }
 }
 
-.ui-select {
+.v-select {
   &--disabled {
     opacity: 0.5;
   }
