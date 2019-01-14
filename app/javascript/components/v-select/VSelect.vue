@@ -170,19 +170,8 @@ export default {
 </script>
 
 <style lang="scss">
-$black: #000000;
-
-.hover--pointer {
-  &:hover {
-    cursor: pointer;
-  }
+.v-select--disabled {
+  opacity: 0.5;
 }
-
-.v-select {
-  &--disabled {
-    opacity: 0.5;
-  }
-}
-
 </style>
 
