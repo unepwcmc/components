@@ -28,43 +28,21 @@
       :aria-multiselectable="isMultiselect" 
       class="v-select__dropdown">
 
-      <template v-if="isMultiselect">
-        <li
-          class="v-select__option"
-          v-for="option in options"
-          :key="option.id">
-          <input
-            class="v-select__default-checkbox"
-            type="checkbox"
-            :id="getOptionInputId(option)"
-            :value="option"
-            v-model="selectedInternal"
-            @change="handleOptionChange(option)">
-          <span
-            class="v-select__checkbox" 
-            :class="{'v-select__checkbox--active': isSelected(option)}"></span>
-          <label :for="getOptionInputId(option)">{{ option.name }}</label>
-        </li>
-      </template>
-
-      <template v-else>
-        <li
-          class="v-select__option"
-          v-for="option in options"
-          :key="option.id">
-          <input
-            class="v-select__default-radio-button"
-            type="radio"
-            :id="getOptionInputId(option)"
-            :value="option"
-            v-model="selectedInternal"
-            @change="handleOptionChange(option)">
-          <span
-            class="v-select__radio-button" 
-            :class="{'v-select__radio-button--active': isSelected(option)}"></span>
-          <label :for="getOptionInputId(option)">{{ option.name }}</label>
-        </li>
-      </template>
+      <li
+        class="v-select__option"
+        v-for="option in options"
+        :key="option.id">
+        <input
+          :class="defaultInputClass"
+          :type="inputType"
+          :id="getOptionInputId(option)"
+          :value="option"
+          v-model="selectedInternal"
+          @change="handleOptionChange(option)">
+        <span
+          :class="getInputClasses(option)"></span>
+        <label :for="getOptionInputId(option)">{{ option.name }}</label>
+      </li>
 
     </ul> 
 
@@ -99,7 +77,8 @@ export default {
       selectedInternal: null,
       dropdownId: this.config.id + '-v-select-dropdown',
       toggleId: this.config.id + '-v-select-toggle',
-      popupRole: this.config.isMultiple ? 'group' : 'radiogroup'
+      popupRole: this.config.isMultiple ? 'group' : 'radiogroup',
+      inputType: this.config.isMultiple ? 'checkbox' : 'radio',
     }
   },
 
@@ -134,6 +113,15 @@ export default {
 
     getOptionInputId(option) {
       return `${this.config.id}-${option.id}`
+    },
+
+    getInputClasses (option) {
+      const inputClass = `v-select__${this.inputType}`
+
+      return {
+        [inputClass]: true,
+        [`${inputClass}--active`]: this.isSelected(option),
+      }
     }
   },
 
@@ -150,6 +138,10 @@ export default {
       }
 
       return this.selectedInternal.id === UNDEFINED_ID ? DEFAULT_SELECT_MESSAGE : this.selectedInternal.name
+    },
+
+    defaultInputClass () {
+      return `v-select__default-${this.inputType}`
     }
   },
 
@@ -163,7 +155,8 @@ export default {
   
   mounted () {
     this.$el.addEventListener('keydown', e => {
-      ESCAPE_KEYCODE  = 27
+      const ESCAPE_KEYCODE = 27
+
       if (this.isActive && e.keyCode === ESCAPE_KEYCODE) { this.closeSelect() }
     })
   },
