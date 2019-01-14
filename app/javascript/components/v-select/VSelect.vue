@@ -13,7 +13,7 @@
       class="v-select__toggle"
       :id="toggleId"
       :class="{'v-select__toggle--active': isActive}"
-      :aria-haspopup="true"
+      aria-haspopup="true"
       :aria-controls="dropdownId"
       :disabled="isDisabled"
       @click="toggleSelect">
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import mixinPopupCloseListeners from '../../mixins/mixin-popup-close-listeners'
 const UNDEFINED_ID = '__UNDEFINED__';
 const UNDEFINED_OBJECT = { id: UNDEFINED_ID, name: 'None' }
 const DEFAULT_SELECT_MESSAGE = 'Select option'
@@ -70,6 +71,8 @@ export default {
       }
   },
 
+  mixins: [mixinPopupCloseListeners],
+
   data () {
     return {
       isActive: false,
@@ -79,6 +82,7 @@ export default {
       toggleId: this.config.id + '-v-select-toggle',
       popupRole: this.config.isMultiple ? 'group' : 'radiogroup',
       inputType: this.config.isMultiple ? 'checkbox' : 'radio',
+      closeCallback: this.closeSelect
     }
   },
 
@@ -146,19 +150,7 @@ export default {
   },
 
   created () {
-    window.addEventListener('click', e => {
-      if (!this.$el.contains(e.target)) { this.closeSelect() }
-    })
-
     this.initializeSelectedInternal()
-  },
-  
-  mounted () {
-    this.$el.addEventListener('keydown', e => {
-      const ESCAPE_KEYCODE = 27
-
-      if (this.isActive && e.keyCode === ESCAPE_KEYCODE) { this.closeSelect() }
-    })
   },
 
   watch: {
