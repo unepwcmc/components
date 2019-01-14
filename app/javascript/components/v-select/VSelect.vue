@@ -2,7 +2,6 @@
   <div class="v-select relative hover--pointer" :class="{'v-select--disabled': isDisabled}">
     <input type="hidden" :name="config.id" :id="config.id" v-model="selectedInternal.name" />
 
-<!-- TODO: move label offscreen rather than not displaying -->
     <div class="v-select__label hover--pointer">
       <label :for="toggleId" class="v-select__selection">
         {{ config.label }}
@@ -16,6 +15,7 @@
       :class="{'v-select__toggle--active': isActive}"
       :aria-haspopup="true"
       :aria-controls="dropdownId"
+      :disabled="isDisabled"
       @click="toggleSelect">
       <span class="v-select__dropdown-text">{{ selectionMessage }}</span>
       <i class="v-select__drop-arrow arrow-svg"/>
