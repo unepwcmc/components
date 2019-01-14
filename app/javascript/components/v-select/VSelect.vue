@@ -1,6 +1,6 @@
 <template>
   <div class="v-select relative hover--pointer" :class="{'v-select--disabled': isDisabled}">
-    <input type="hidden" :name="hiddenId" :id="hiddenId" v-model="selectedInternal.name" />
+    <input type="hidden" :name="config.id" :id="config.id" v-model="selectedInternal.name" />
 
 <!-- move label offscreen rather than not displaying -->
     <div
@@ -14,7 +14,7 @@
 
     <button
       class="v-select__toggle"
-      id="v-select-toggle"
+      :id="toggleId"
       :class="{'v-select__toggle--active': isActive}"
       aria-haspopup="listbox"
       @click="toggleSelect">
@@ -22,45 +22,48 @@
       <i class="v-select__drop-arrow arrow-svg"/>
     </button>
 
-    <ul v-show="isActive" role="listbox" class="v-select__dropdown">
+    <ul v-show="isActive" role="listbox" :aria-multiselectable="isMultiselect" class="v-select__dropdown">
 
       <template v-if="isMultiselect">
         <li
           role="option"
+          :aria-selected="isSelected(option)"
           class="v-select__option"
           v-for="option in options"
           :key="option.id">
           <input
             class="v-select__default-checkbox"
             type="checkbox"
-            :id="option.id"
+            :id="getOptionInputId(option)"
             :value="option"
             v-model="selectedInternal"
-            @change="optionClick(option)">
-          <div
-            class="v-select__option-label">
-            <span
-              class="v-select__checkbox" 
-              :class="{'v-select__checkbox--active': isSelected(option.id)}"></span>
-            <label :for="option.id">{{ option.name }}</label>
-          </div>
+            @change="handleOptionChange(option)">
+          <span
+            class="v-select__checkbox" 
+            :class="{'v-select__checkbox--active': isSelected(option)}"></span>
+          <label :for="getOptionInputId(option)">{{ option.name }}</label>
         </li>
       </template>
 
       <template v-else>
         <li
+          role="option"
           class="v-select__option"
           v-for="option in options"
-          :key="option.id"
-          @click="optionClick(option)">
+          :key="option.id">
+          <input
+            class="v-select__default-radio-button"
+            type="radio"
+            :id="getOptionInputId(option)"
+            :value="option"
+            v-model="selectedInternal"
+            @change="handleOptionChange(option)">
           <span
-            :aria-labelledby="`${option.id}_radio`"
-            role="radio"
-            class="v-select__radio-button"
-            :class="{'v-select__radio-button--active': isSelected(option.id)}"></span>
-          <span :id="`${option.id}_radio`">{{ option.name }}</span>
+            class="v-select__radio-button" 
+            :class="{'v-select__radio-button--active': isSelected(option)}"></span>
+          <label :for="getOptionInputId(option)">{{ option.name }}</label>
         </li>
-      </template>
+      </template>   
 
     </ul>
   </div>
@@ -89,10 +92,10 @@ export default {
 
   data () {
     return {
-      hiddenId: `${this.config.id}-hidden`,
       isActive: false,
       isMultiselect: this.config.isMultiple,
-      selectedInternal: null
+      selectedInternal: null,
+      toggleId: this.config.id + '-v-select-toggle'
     }
   },
 
@@ -113,22 +116,20 @@ export default {
       }
     },
 
-    selectSingular (selected) {
-      this.selectedInternal = selected
-      this.closeSelect()
-    },
-
-    optionClick (selected) {
-      if (!this.isMultiselect) {this.selectSingular(selected)}
+    handleOptionChange (selected) {
       this.$emit('update:selected-option', this.selectedInternal)
     },
 
-    isSelected (id) {
+    isSelected (option) {
       if(this.isMultiselect) { 
-        return this.selectedInternal.find(option => id === option.id)
+        return this.selectedInternal.find(selectedOption => option.id === selectedOption.id)
       }
 
-      return id === this.selectedInternal.id
+      return option.id === this.selectedInternal.id
+    },
+
+    getOptionInputId(option) {
+      return `${this.config.id}-${option.id}`
     }
   },
 
@@ -176,17 +177,6 @@ $black: #000000;
 .v-select {
   &--disabled {
     opacity: 0.5;
-  }
-
-  &__radio-button {
-    border: $black 1px solid;
-    width: 10px; height: 10px;
-
-    display: inline-block;
-
-    &--active {
-      background-color: $black;
-    }
   }
 }
 
