@@ -33,6 +33,7 @@
         <input
           :class="defaultInputClass"
           :id="getOptionInputId(option)"
+          :name="dropdownOptionsName"
           :type="inputType"
           :value="option"
           v-model="selectedInternal"
@@ -78,6 +79,7 @@ export default {
       isMultiselect: this.config.isMultiple,
       selectedInternal: null,
       dropdownId: 'v-select-dropdown-' + this.config.id,
+      dropdownOptionsName: 'v-select-dropdown-input' + this.config.id,
       toggleId: 'v-select-toggle-' + this.config.id,
       popupRole: this.config.isMultiple ? 'group' : 'radiogroup',
       inputType: this.config.isMultiple ? 'checkbox' : 'radio',
@@ -156,9 +158,9 @@ export default {
   },
 
   mounted () {
-    this.$el.querySelector('#' + this.dropdownId).addEventListener('blur', () => {
-      this.closeSelect()
-    })
+    // this.$el.querySelector('#' + this.dropdownId).addEventListener('blur', () => {
+    //   this.closeSelect()
+    // })
   },
 
   watch: {

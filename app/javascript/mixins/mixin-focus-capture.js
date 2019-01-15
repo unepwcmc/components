@@ -1,7 +1,5 @@
 const INPUT_SELECTORS = 'select, input, textarea, button, a, [tabindex]:not([tabindex="-1"])'
 const TAB_KEYCODE = 9
-const ARROW_UP_KEYCODE = 38
-const ARROW_DOWN_KEYCODE = 40
 
 export default (toggleVariable) => ({
   data() {
@@ -23,18 +21,6 @@ export default (toggleVariable) => ({
     if (isRadioGroup) {
       modalElement.addEventListener('keydown', e => {
         if (e.keyCode === TAB_KEYCODE) {
-          e.preventDefault()
-        }
-      })
-
-      firstInput.addEventListener('keydown', e => {
-        if (e.keyCode === ARROW_UP_KEYCODE) {
-          e.preventDefault()
-        }
-      })
-
-      lastInput.addEventListener('keydown', e => {
-        if (e.keyCode === ARROW_DOWN_KEYCODE) {
           e.preventDefault()
         }
       })
