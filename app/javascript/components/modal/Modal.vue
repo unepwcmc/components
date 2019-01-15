@@ -1,12 +1,14 @@
 <template>
-  <div role="dialog" aria-modal="true" class="modal" :class="{ 'modal--active' : isActive }">
+  <div class="modal" :class="{ 'modal--active' : isActive }" @click.self="closeModal">
+    <div role="dialog" aria-modal="true" class="modal__dialog">
 
-    <div class="modal__content">
-      <button class="button--plain modal__close" @click="closeModal">
-        <i>close</i>
-      </button>
+      <div class="modal__content">
+        <button class="button--plain modal__close" @click="closeModal">
+          <i>close</i>
+        </button>
 
-      <slot></slot>
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -14,11 +16,12 @@
 <script>
 import { eventHub } from '../../vue.js'
 import mixinModalKeyboardNav from '../../mixins/mixin-modal-keyboard-nav'
+import mixinPopupCloseListeners from '../../mixins/mixin-popup-close-listeners'
 
 export default {
   name: 'modal',
 
-  mixins: [mixinModalKeyboardNav('modal-trigger', 'isActive')],
+  mixins: [mixinModalKeyboardNav('modal-trigger', 'isActive'), mixinPopupCloseListeners('closeModal', false, true)],
 
   computed: {
     isActive () {
@@ -39,15 +42,25 @@ export default {
 </script>
 
 <style lang="scss">
-  .modal {
+.modal {
+  background-color: rgba(black, .6);
+  
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 300;
+
+  &--active { display: block; }
+
+  &__dialog {
     background-color: white;
 
-    display: none;
     position: absolute;
     top: 50%;
     right: 50%;
-    z-index: 6;
-
-    &--active { display: block; }
   }
+}
 </style>

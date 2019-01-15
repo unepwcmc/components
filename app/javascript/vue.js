@@ -12,7 +12,6 @@ import AccordionItem from './components/accordion/AccordionItem'
 
 import Modal from './components/modal/Modal'
 import ModalTrigger from './components/modal/ModalTrigger'
-import ModalWrapper from './components/modal/ModalWrapper'
 
 import Tooltip from './components/tooltip/Tooltip'
 
@@ -39,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         el: '#v-app',
         store,
 
-        components: { Accordion, AccordionItem, Modal, ModalTrigger, ModalWrapper, Tooltip, VMap, VNav, VSelect }
+        components: { Accordion, AccordionItem, Modal, ModalTrigger, Tooltip, VMap, VNav, VSelect }
       })
     })
   }

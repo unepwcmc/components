@@ -68,7 +68,7 @@ export default {
       }
   },
 
-  mixins: [mixinPopupCloseListeners()],
+  mixins: [mixinPopupCloseListeners('closeSelect')],
 
   data () {
     return {
@@ -78,8 +78,7 @@ export default {
       dropdownId: this.config.id + '-v-select-dropdown',
       toggleId: this.config.id + '-v-select-toggle',
       popupRole: this.config.isMultiple ? 'group' : 'radiogroup',
-      inputType: this.config.isMultiple ? 'checkbox' : 'radio',
-      closeCallback: this.closeSelect
+      inputType: this.config.isMultiple ? 'checkbox' : 'radio'
     }
   },
 
