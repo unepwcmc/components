@@ -1,6 +1,7 @@
 <template>
   <div class="filters__filter flex" :class="{ 'filter--active': isActive}">
-    <i class="filters__radio-button" @click="toggleDataset"></i>
+    <input type="radio" class="filters__default-radio-button" :checked="isActive" @click="toggleDataset">
+    <i class="filters__radio-button"></i>
     <div class="filters__filter-container">
       <div class="filters__filter-legend">
         <h3 class="filters__filter-title">{{ name }}</h3>

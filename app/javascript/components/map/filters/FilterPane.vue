@@ -105,21 +105,7 @@ export default {
   }
 }
 .filters {
-  &__radio-button {
-    border: white 1px solid;
-    width: 10px;
-    height: 10px;
-
-    display: inline-block;
-  }
-
   &__filter {
-    &.filter--active {
-      .filters__radio-button {
-        background-color: white;
-      }
-    }
-
     &-legend {
       &__image,
       &__gradient {
