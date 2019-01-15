@@ -1,10 +1,17 @@
 <template>
   <div class="tooltip">
-    <div @mouseenter="toggleTooltip(true)" @mouseleave="toggleTooltip(false)" v-touch="toggleTooltip" class="tooltip__trigger">
+    <div
+      tabindex="0"
+      :aria-describedby="id"
+      :aria-expanded="isActive"
+      @mouseenter="toggleTooltip(true)"
+      @mouseleave="toggleTooltip(false)"
+      v-touch="toggleTooltip"
+      class="tooltip__trigger">
       <slot></slot>
     </div>
-    <div v-show="isActive" class="tooltip__target">{{ text }}</div>
-  </div>  
+    <div role="tooltip" :id="id" v-show="isActive" class="tooltip__target">{{ text }}</div>
+  </div>
 </template>
 
 <script>
@@ -21,8 +28,7 @@
     data () {
       return {
         isActive: false,
-        top: 0,
-        left: 0
+        id: this._uid
       }
     },
 
@@ -30,6 +36,17 @@
       toggleTooltip (boolean) {
         this.isActive = typeof boolean == 'boolean' ? boolean : !this.isActive
       }
+    },
+
+    mounted () {      
+      const tooltipTrigger = this.$el.querySelector('.tooltip__trigger')
+
+      tooltipTrigger.addEventListener('blur', () => {
+        this.toggleTooltip(false)
+      })
+      tooltipTrigger.addEventListener('focus', () => {
+        this.toggleTooltip(true)
+      })
     }
   }  
 </script>

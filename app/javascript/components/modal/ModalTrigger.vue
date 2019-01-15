@@ -1,15 +1,19 @@
 <template>
-  <button class="button--beige-dark" @click="openModal"><slot></slot></button>
+  <button
+    id="modal-trigger"
+    class="modal__trigger button--beige-dark"
+    aria-haspopup="dialog"
+    @click="openModal"><slot></slot></button>
 </template>
 
 <script>
-  export default {
-    name: 'modal-trigger',
+export default {
+  name: 'modal-trigger',
 
-    methods: {
-      openModal () {
-        this.$store.commit('modal/updateModalStatus')
-      }
+  methods: {
+    openModal () {
+      this.$store.commit('modal/updateModalStatus')
     }
   }
+}
 </script>

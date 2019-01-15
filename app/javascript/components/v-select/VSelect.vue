@@ -68,7 +68,7 @@ export default {
       }
   },
 
-  mixins: [mixinPopupCloseListeners],
+  mixins: [mixinPopupCloseListeners()],
 
   data () {
     return {

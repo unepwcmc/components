@@ -1,15 +1,17 @@
-export default {
+export default (closeOnClickOutside=true, closeOnEscKeypress=true) => ({
   created () {
-    window.addEventListener('click', e => {
-      if (!this.$el.contains(e.target)) { this.closeCallback() }
-    })
-  },
-  
-  mounted () {
-    this.$el.addEventListener('keydown', e => {
-      const ESCAPE_KEYCODE = 27
+    if(closeOnClickOutside) {
+      window.addEventListener('click', e => {
+        if (!this.$el.contains(e.target)) { this.closeCallback() }
+      })
+    }
 
-      if (this.isActive && e.keyCode === ESCAPE_KEYCODE) { this.closeCallback() }
-    })
+    if(closeOnEscKeypress) {
+      window.addEventListener('keydown', e => {
+        const ESCAPE_KEYCODE = 27
+  
+        if (this.isActive && e.keyCode === ESCAPE_KEYCODE) { this.closeCallback() }
+      })
+    }
   },
-}
+})

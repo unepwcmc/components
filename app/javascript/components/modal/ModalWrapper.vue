@@ -1,26 +1,34 @@
 <template>
-  <div class="modal-wrapper flex-h-center" :class="{ 'modal-wrapper--active' : isActive }" @click.self="closeModal">
-  </div>
+  <div
+    class="modal-wrapper flex-h-center" 
+    :class="{ 'modal-wrapper--active' : isActive }" 
+    @click.self="closeModal"></div>
 </template>
 
 <script>
-  import { eventHub } from '../../vue.js'
+import { eventHub } from '../../vue.js'
+import mixinPopupCloseListeners from '../../mixins/mixin-popup-close-listeners'
 
-  export default {
-    name: 'modal-wrapper',
+export default {
+  name: 'modal-wrapper',
 
-    computed: {
-      isActive () {
-        return this.$store.state.modal.isActive
-      }
+  mixins: [mixinPopupCloseListeners(false, true)],
+
+  computed: {
+    isActive () {
+      return this.$store.state.modal.isActive
     },
-
-    methods: {
-      closeModal () {
-        this.$store.commit('modal/updateModalStatus')
-      },
+    closeCallback () {
+      return this.closeModal
     }
+  },
+
+  methods: {
+    closeModal () {
+      this.$store.commit('modal/updateModalStatus')
+    },
   }
+}
 </script>
 
 <style lang="scss">
