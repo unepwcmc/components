@@ -1,4 +1,6 @@
-export default (triggerId, toggleVariable) => ({
+const INPUT_SELECTORS = 'select, input, textarea, button, a, [tabindex]:not([tabindex="-1"])'
+
+export default (toggleVariable) => ({
   data() {
     return {
       firstInput: {}
@@ -7,9 +9,11 @@ export default (triggerId, toggleVariable) => ({
 
   mounted () {
     const TAB_KEYCODE = 9
-    const inputs = this.$el.querySelectorAll('select, input, textarea, button, a, [tabindex]:not([tabindex="-1"])');
+    const modalElement = this.modalId ? document.querySelector('#' + this.modalId) : this.$el
+    const inputs = modalElement.querySelectorAll(INPUT_SELECTORS)
     const firstInput = inputs[0]
-    const lastInput = inputs[inputs.length - 1];
+    const lastInput = inputs[inputs.length - 1]
+
     this.firstInput = firstInput
 
     lastInput.addEventListener('keydown', e => {
@@ -29,12 +33,14 @@ export default (triggerId, toggleVariable) => ({
 
   watch: {
     [toggleVariable] (isExpanded) {
+      document.activeElement.blur()
+
       if (isExpanded) {
         this.$nextTick(() => {
           this.firstInput.focus()
         })
-      } else {
-        document.querySelector('#' + triggerId).focus()
+      } else if (this.triggerId) {
+        document.querySelector('#' + this.triggerId).focus()
       }
     }
   }

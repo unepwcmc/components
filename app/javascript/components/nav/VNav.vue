@@ -1,5 +1,5 @@
 <template>
-  <div class="nav flex flex-v-center flex-h-between">
+  <nav aria-label="site-nav" class="nav flex flex-v-center flex-h-between">
     <a href="" title="Home" class="nav__logo">Home</a>
 
     <span class="nav__left flex-hs-start">
@@ -8,19 +8,17 @@
 
     <div class="nav__item-container flex flex-v-center flex-h-end" :class="navType">
 
-      <button class="nav__close" v-show="isBurgerNav" @click="closeNavPane">X</button>
-
-      <span class="nav__item" v-for="page in pages" :key="page.id">
-        <v-nav-dropdown
-          v-if="page.children"
-          v-on:nav-dropdown-click="toggleDropdown(page.id)"
-          v-on:nav-dropdown-click-outside="handleClickOutside(page.id)"
-          :item="page"
-          :is-active="isActiveDropdown(page.id)"
-          :is-burger="isBurgerNav">
-        </v-nav-dropdown>
-        <v-nav-link v-else :item="page"></v-nav-link>
-      </span>
+      <button id="close-nav-pane" class="nav__close" v-show="isBurgerNav" @click="closeNavPane">X</button>
+      <ul role="menubar">
+        <li role="none" class="nav__item" v-for="page in pages" :key="page.id">
+          <v-nav-dropdown
+            v-if="page.children"
+            :item="page"
+            :is-burger="isBurgerNav">
+          </v-nav-dropdown>
+          <v-nav-link v-else :item="page"></v-nav-link>
+        </li>
+      </ul>
 
     </div>
 
@@ -28,9 +26,9 @@
       <slot name="nav-right"></slot>
     </span>
 
-    <button class="nav__burger" v-show="isBurgerNav" @click="openNavPane">=</button>
+    <button id="open-nav-pane" class="nav__burger" v-show="isBurgerNav" @click="openNavPane">=</button>
 
-  </div>
+  </nav>
 </template>
 
 <script>
@@ -65,20 +63,6 @@ export default {
   },
 
   methods: {
-    toggleDropdown(id) {
-      this.selectedDropdownId = this.selectedDropdownId === id ? null : id
-    },
-
-    handleClickOutside(id) {
-      if (this.selectedDropdownId === id && !this.isBurgerNav) {
-        this.selectedDropdownId = null
-      }
-    },
-
-    isActiveDropdown(id) {
-      return id === this.selectedDropdownId
-    },
-
     openNavPane() {
       this.isNavPaneActive = true
     },

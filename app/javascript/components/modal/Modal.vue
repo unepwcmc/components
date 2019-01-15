@@ -21,7 +21,13 @@ import mixinPopupCloseListeners from '../../mixins/mixin-popup-close-listeners'
 export default {
   name: 'modal',
 
-  mixins: [mixinModalKeyboardNav('modal-trigger', 'isActive'), mixinPopupCloseListeners('closeModal', false, true)],
+  mixins: [mixinModalKeyboardNav('isActive'), mixinPopupCloseListeners('closeModal', false, true)],
+
+  data() {
+    return {
+      triggerId: 'modal-trigger',
+    }
+  },
 
   computed: {
     isActive () {
