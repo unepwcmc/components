@@ -15,17 +15,17 @@
 
 <script>
 import { eventHub } from '../../vue.js'
-import mixinModalKeyboardNav from '../../mixins/mixin-modal-keyboard-nav'
+import mixinFocusCapture from '../../mixins/mixin-focus-capture'
 import mixinPopupCloseListeners from '../../mixins/mixin-popup-close-listeners'
 
 export default {
   name: 'modal',
 
-  mixins: [mixinModalKeyboardNav('isActive'), mixinPopupCloseListeners('closeModal', false, true)],
+  mixins: [mixinFocusCapture('isActive'), mixinPopupCloseListeners('closeModal', false, true)],
 
   data() {
     return {
-      triggerId: 'modal-trigger',
+      mixinTriggerId: 'modal-trigger',
     }
   },
 

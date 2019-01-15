@@ -1,11 +1,11 @@
 <template>
   <div class="nav__dropdown" :class="{'nav__dropdown--active': isActive}">
-    <button :id="triggerId" aria-haspopup="true" :aria-expanded="isActive" :aria-controls="modalId" class="nav__dropdown-toggle hover--pointer flex-inline" @click="toggleDropdown">
-      <label :for="modalId" class="nav__select nav__select--dropdown">{{item.label}}</label>
+    <button :id="mixinTriggerId" aria-haspopup="true" :aria-expanded="isActive" :aria-controls="mixinModalId" class="nav__dropdown-toggle hover--pointer flex-inline" @click="toggleDropdown">
+      <label :for="mixinModalId" class="nav__select nav__select--dropdown">{{item.label}}</label>
       <span class="nav__drop-arrow">V</span>
     </button>
     <div class="nav__dropdown-wrapper">
-      <menu :id="modalId" class="nav__dropdown-menu" :class="{'nav__dropdown-menu--two-col': hasTwoColumns}">
+      <menu :id="mixinModalId" class="nav__dropdown-menu" :class="{'nav__dropdown-menu--two-col': hasTwoColumns}">
         <v-nav-link
           class="nav__dropdown-item"
           v-for="dropdownItem in item.children"
@@ -19,7 +19,7 @@
 
 <script>
 import VNavLink from "./VNavLink"
-import mixinModalKeyboardNav from '../../mixins/mixin-modal-keyboard-nav'
+import mixinFocusCapture from '../../mixins/mixin-focus-capture'
 import mixinPopupCloseListeners from '../../mixins/mixin-popup-close-listeners'
 
 export default {
@@ -27,7 +27,7 @@ export default {
     VNavLink
   },
 
-  mixins: [mixinModalKeyboardNav('isActive'), mixinPopupCloseListeners('closeDropdown')],
+  mixins: [mixinFocusCapture('isActive'), mixinPopupCloseListeners('closeDropdown')],
 
   props: {
     item: {
@@ -42,9 +42,10 @@ export default {
 
   data() {
     return {
-      modalId: `nav-dropdown-${this.item.label.toLowerCase()}`,
-      triggerId: `nav-dropdown-toggle-${this.item.label.toLowerCase()}`,
-      isActive: false
+      isActive: false,
+
+      mixinModalId: `nav-dropdown-${this.item.label.toLowerCase()}`,
+      mixinTriggerId: `nav-dropdown-toggle-${this.item.label.toLowerCase()}`
     }
   },
 

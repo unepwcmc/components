@@ -48,6 +48,8 @@
 
 <script>
 import mixinPopupCloseListeners from '../../mixins/mixin-popup-close-listeners'
+import mixinFocusCapture from '../../mixins/mixin-focus-capture'
+
 const UNDEFINED_ID = '__UNDEFINED__';
 const UNDEFINED_OBJECT = { id: UNDEFINED_ID, name: 'None' }
 const DEFAULT_SELECT_MESSAGE = 'Select option'
@@ -68,17 +70,21 @@ export default {
       }
   },
 
-  mixins: [mixinPopupCloseListeners('closeSelect')],
+  mixins: [mixinPopupCloseListeners('closeSelect'), mixinFocusCapture('isActive')],
 
   data () {
     return {
       isActive: false,
       isMultiselect: this.config.isMultiple,
       selectedInternal: null,
-      dropdownId: this.config.id + '-v-select-dropdown',
-      toggleId: this.config.id + '-v-select-toggle',
+      dropdownId: 'v-select-dropdown-' + this.config.id,
+      toggleId: 'v-select-toggle-' + this.config.id,
       popupRole: this.config.isMultiple ? 'group' : 'radiogroup',
-      inputType: this.config.isMultiple ? 'checkbox' : 'radio'
+      inputType: this.config.isMultiple ? 'checkbox' : 'radio',
+
+      mixinModalId: 'v-select-dropdown-' + this.config.id,
+      mixinTriggerId: 'v-select-toggle-' + this.config.id,
+      mixinIsRadioGroup: !this.config.isMultiple
     }
   },
 
@@ -147,6 +153,12 @@ export default {
 
   created () {
     this.initializeSelectedInternal()
+  },
+
+  mounted () {
+    this.$el.querySelector('#' + this.dropdownId).addEventListener('blur', () => {
+      this.closeSelect()
+    })
   },
 
   watch: {
