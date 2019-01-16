@@ -31,14 +31,8 @@ Vue.use(TurbolinksAdapter)
 Vue.use(Vue2TouchEvents)
 const components = { Accordion, AccordionItem, Modal, ModalTrigger, Tooltip, VMap, VNav, VSelect }
 
-// Object.keys(Components).forEach(name => {
-//   Vue.component(name, Components[name])
-// })
-
-const app = new Vue({
-  el: '#v-app',
-  store,
-  components
+Object.keys(Components).forEach(name => {
+  Vue.component(name, Components[name])
 })
 
 export default components;
