@@ -157,12 +157,6 @@ export default {
     this.initializeSelectedInternal()
   },
 
-  mounted () {
-    // this.$el.querySelector('#' + this.dropdownId).addEventListener('blur', () => {
-    //   this.closeSelect()
-    // })
-  },
-
   watch: {
     selected (newSelectedOption) {
       this.selectedInternal = newSelectedOption
