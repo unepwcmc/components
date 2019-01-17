@@ -294,3 +294,28 @@ li {
   right: 0;
   z-index: 2500;
 }
+
+//--------------------------------------------------
+// drop arrow
+//--------------------------------------------------
+.drop-arrow {
+  transform: rotate(0deg);
+
+  &--end {
+    @extend .flex-hs-end;
+    @extend .flex-no-shrink;
+  }
+}
+
+@mixin flip-child-drop-arrow($class:"drop-arrow") {
+  .#{$class} { transform:  rotate(180deg); }
+}
+
+.arrow-svg {
+  content: '';
+  background-image: image-url('Drop-Arrow.svg');
+  background-repeat: no-repeat;
+  width: rem-calc(17); height: rem-calc(8);
+
+  display: inline-block;
+}

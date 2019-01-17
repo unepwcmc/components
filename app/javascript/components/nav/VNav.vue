@@ -103,12 +103,12 @@ $white: #ffffff;
       z-index: 1;
     }
 
-    &__drop-arrow {
+    .drop-arrow {
       transform: rotate(0deg) scale(0.8);
     }
     
     &__dropdown--active {
-      .nav__drop-arrow { transform: rotate(180deg) scale(0.8); }
+      .drop-arrow { transform: rotate(180deg) scale(0.8); }
       .nav__dropdown-menu { display: block; }
     }
 

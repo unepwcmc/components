@@ -16,7 +16,7 @@
       :disabled="isDisabled"
       @click="toggleSelect">
       <span class="v-select__dropdown-text">{{ selectionMessage }}</span>
-      <i class="v-select__drop-arrow arrow-svg"/>
+      <i class="drop-arrow arrow-svg"/>
     </button>
 
     <ul 
@@ -168,6 +168,11 @@ export default {
 <style lang="scss">
 .v-select--disabled {
   opacity: 0.5;
+}
+.v-select__toggle--active {
+  .drop-arrow {
+    transform: rotate(180deg)
+  }
 }
 </style>
 

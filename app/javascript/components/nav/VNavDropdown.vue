@@ -2,7 +2,7 @@
   <div class="nav__dropdown" :class="{'nav__dropdown--active': isActive}">
     <button :id="mixinTriggerId" aria-haspopup="true" :aria-expanded="isActive" :aria-controls="mixinModalId" class="nav__dropdown-toggle hover--pointer flex-inline" @click="toggleDropdown">
       <label :for="mixinModalId" class="nav__select nav__select--dropdown">{{item.label}}</label>
-      <span class="nav__drop-arrow">V</span>
+      <span class="drop-arrow arrow-svg"></span>
     </button>
     <div class="nav__dropdown-wrapper">
       <menu :id="mixinModalId" class="nav__dropdown-menu" :class="{'nav__dropdown-menu--two-col': hasTwoColumns}">
